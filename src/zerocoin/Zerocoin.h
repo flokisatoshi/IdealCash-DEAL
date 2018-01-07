@@ -7,7 +7,7 @@
 * @date       June 2013
 *
 * @copyright  Copyright 2013 Ian Miers, Christina Garman and Matthew Green
-* @license    This project is released under the MIT license.
+* @license    This project is released under the MIT lic
 **/
 
 #ifndef ZEROCOIN_H_
