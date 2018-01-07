@@ -1,7 +1,14 @@
 
-idealcash development tree
+IdealCash Development Tree
 
-idealcash is a PoS-based cryptocurrency.
+IdealCash is a PURE PoS-based cryptocurrency.
+
+IDEALCASH 2018
+
+IdealCash.io
+
+
+
 
 Development process
 ===========================
