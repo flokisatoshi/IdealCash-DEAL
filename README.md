@@ -1,4 +1,4 @@
-Fork And Improved Version Of BlackCoin
+Fork And Improved Version
 
 IdealCash Development Tree
 
