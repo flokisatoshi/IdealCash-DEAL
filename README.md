@@ -6,7 +6,7 @@ IDEALCASH 2018
 
 IdealCash.io
 
-Fork And Improved Version Of BlackCoin
+Fork Of BlackCoin For Pure PoS / Clean Slate, Cleaned Code.
 
 ------------------------------------------------------------
 
