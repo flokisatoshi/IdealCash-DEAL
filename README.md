@@ -1,3 +1,5 @@
+
+All of these features will be throughly explained in version 2 & 3 of the IDEALCASH WHITE PAPER.
 ------------------------------------------------------------
 New Projects 2018
 
