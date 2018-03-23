@@ -1,20 +1,20 @@
-
-All of these features will be throughly explained in version 2 & 3 of the IDEALCASH WHITE PAPER.
+Features will be explained in version 2 of IDEALCASH WHITE PAPER.
 ------------------------------------------------------------
 New Projects 2018
 
-"PYRA" Universal Merchant Wallet 
+"PYRAwallet" Universal Merchant Wallet 
 
-- Extra Coin Control Features
-- Marketplace build in
-- Atomic Swap
+-NEW GUI  / NEW FEATURES
+
+------------------------------
+
+Android Mobile Wallet
++Staking to be added
+
 ------------------------------------------------------------
 
 IdealCash Development 2018
 
 IdealCash.io
 
-Fork Of BlackCoin : PURE PoS : Cleaned Code
-+Additions of NovaCoin
-
-------------------------------------------------------------
+----------------------------------------------------------
