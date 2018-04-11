@@ -16,10 +16,10 @@
 #endif
 
 #ifdef USE_UPNP
-#include </usr/local/include/miniupnpc/miniwget.h>
-#include </usr/local/include/miniupnpc/miniupnpc.h>
-#include </usr/local/include/miniupnpc/upnpcommands.h>
-#include </usr/local/include/miniupnpc/upnperrors.h>
+#include <miniupnpc/miniwget.h>
+#include <miniupnpc/miniupnpc.h>
+#include <miniupnpc/upnpcommands.h>
+#include <miniupnpc/upnperrors.h>
 #endif
 
 using namespace std;
@@ -1112,7 +1112,7 @@ void ThreadMapPort2(void* parg)
 #else
     /* miniupnpc 1.6 */
     int error = 0;
-     devlist = upnpDiscover(2000, multicastif, minissdpdpath, 0, 0, 0, &error);
+    devlist = upnpDiscover(2000, multicastif, minissdpdpath, 0, 0, &error);
 #endif
 
     struct UPNPUrls urls;
@@ -1229,7 +1229,7 @@ void MapPort()
 // The first name is used as information source for addrman.
 // The second name should resolve to a list of seed addresses.
 static const char *strDNSSeed[][2] = {
-    {"45.77.87.65"},
+    {"idealcashseed", "45.77.87.65"},
 };
 
 void ThreadDNSAddressSeed(void* parg)
@@ -1309,7 +1309,7 @@ void DumpAddresses()
     CAddrDB adb;
     adb.Write(addrman);
 
-    printf("Flushed %d addresses to peers.dat  %" PRId64 "ms\n",
+    printf("Flushed %d addresses to peers.dat  %"PRId64"ms\n",
            addrman.size(), GetTimeMillis() - nStart);
 }
 

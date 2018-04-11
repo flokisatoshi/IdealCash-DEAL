@@ -134,8 +134,10 @@ void AddressBookPage::setModel(AddressTableModel *model)
     // Set column widths
     ui->tableView->horizontalHeader()->resizeSection(
             AddressTableModel::Address, 320);
-    ui->tableView->horizontalHeader()->setResizeMode(
-            AddressTableModel::Label, QHeaderView::Stretch);
+    //ui->tableView->horizontalHeader()->setResizeMode(
+    //        AddressTableModel::Label, QHeaderView::Stretch);
+    ui->tableView->horizontalHeader()->setSectionResizeMode(
+    AddressTableModel::Label, QHeaderView::Stretch);
 
     connect(ui->tableView->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
             this, SLOT(selectionChanged()));
