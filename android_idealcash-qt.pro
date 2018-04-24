@@ -25,8 +25,10 @@ OBJECTS_DIR = build
 MOC_DIR = build
 UI_DIR = build
 
+USE_UPNP=1
 USE_IPV6=0
 USE_LEVELDB=1
+USE_QRCODE=1
 #USE_ASM=1
 BOOST_LIB_SUFFIX=-gcc-mt-1_57
 
@@ -55,9 +57,19 @@ android {
         BOOST_PATH = $$MAIN_PATH/boost_1_57_0
         #/stage/lib
         OPENSSL_PATH = $$MAIN_PATH/openssl-1.0.2l
-        #MINIUPNP_PATH = $$MAIN_PATH/MiniUPnP-for-Android-Prebuilt
+
+        #MINIUPNPC Prebuilt from https://github.com/PurpleI2P/MiniUPnP-for-Android-Prebuilt
+        MINIUPNP_PATH = $$MAIN_PATH/MiniUPnP-for-Android-Prebuilt
+        MINIUPNPC_LIB_PATH = $$MAIN_PATH/MiniUPnP-for-Android-Prebuilt/armeabi-v7a/lib
+
         IFADDRS_PATH = $$MAIN_PATH/android-ifaddrs-from-android-source
         BDB_PATH = $$MAIN_PATH/db-4.8.30/build_unix
+
+        #added QRENCODE from https://fukuchi.org/works/qrencode/
+        #to configure for android arm run ./configure --host=arm-linux --disable-shared
+        #then run make
+        QRENCODE_INCLUDE_PATH = $$MAIN_PATH/qrencode-4.0.0
+        QRENCODE_LIB_PATH = $$MAIN_PATH/qrencode-4.0.0/.libs
 
         DEFINES += ANDROID=1
         DEFINES += __ANDROID__
@@ -74,7 +86,9 @@ android {
                 $$OPENSSL_PATH/include \
                 $$IFADDRS_PATH \
                 $$BDB_PATH \
-                build
+                build \
+                $$MINIUPNP_PATH/miniupnp-2.0/include
+# \
 #                $$NDK_PATH/platforms/android-9/arch-arm/usr/include/ \
 #                $$NDK_PATH/sources/cxx-stl/stlport/stlport/ -I $NDK_PATH/sources/cxx-stl/system/include/
 
@@ -104,9 +118,8 @@ android {
                         -lboost_program_options$$BOOST_POSTFIX \
                         -lboost_system$$BOOST_POSTFIX \
                         -lboost_thread$$BOOST_POSTFIX \
-                        -L$$OPENSSL_PATH -lcrypto -lssl
-#\
-#			-L$$MINIUPNP_PATH/miniupnp-2.0/armeabi-v7a/lib/ -lminiupnpc
+                        -L$$OPENSSL_PATH -lcrypto -lssl\
+                        -L$$MINIUPNP_PATH/miniupnp-2.0/armeabi-v7a/lib/ -lminiupnpc
 
                 PRE_TARGETDEPS += $$OPENSSL_PATH/libcrypto.a \
                         $$OPENSSL_PATH/libssl.a
@@ -116,6 +129,7 @@ android {
 #                        $$OPENSSL_PATH/armeabi-v7a/lib/libssl_1_0_0.so
 #\
 #			$$MINIUPNP_PATH/miniupnp-2.0/armeabi-v7a/lib/libminiupnpc.so
+                 ANDROID_EXTRA_LIBS += $$MINIUPNP_PATH/miniupnp-2.0/armeabi-v7a/lib/libminiupnpc.so
         }
 
         equals(ANDROID_TARGET_ARCH, x86){
@@ -164,18 +178,19 @@ contains(USE_QRCODE, 1) {
 #  or: qmake "USE_UPNP=0" (disabled by default)
 #  or: qmake "USE_UPNP=-" (not supported)
 # miniupnpc (http://miniupnp.free.fr/files/) must be installed for support
-#contains(USE_UPNP, -) {
-#    message(Building without UPNP support)
-#} else {
-#    message(Building with UPNP support)
-#    count(USE_UPNP, 0) {
-#        USE_UPNP=1
-#    }
-#    DEFINES += USE_UPNP=$$USE_UPNP STATICLIB
-#    INCLUDEPATH += $$MINIUPNPC_INCLUDE_PATH
-#    LIBS += $$join(MINIUPNPC_LIB_PATH,,-L,) -lminiupnpc
-#    win32:LIBS += -liphlpapi
-#}
+contains(USE_UPNP, -) {
+    message(Building without UPNP support)
+} else {
+    message(Building with UPNP support)
+    count(USE_UPNP, 0) {
+        USE_UPNP=1
+    }
+    DEFINES += USE_UPNP=$$USE_UPNP STATICLIB
+    INCLUDEPATH += $$MINIUPNPC_INCLUDE_PATH
+    LIBS += $$join(MINIUPNPC_LIB_PATH,,-L,) -lminiupnpc
+    #LIBS += -lminiupnpc
+    win32:LIBS += -liphlpapi
+}
 
 # use: qmake "USE_DBUS=1"
 contains(USE_DBUS, 1) {
@@ -532,6 +547,34 @@ android {
 }
 
 DISTFILES += \
+    android/AndroidManifest.xml \
+    android/gradle/wrapper/gradle-wrapper.jar \
+    android/gradlew \
+    android/res/values/libs.xml \
+    android/build.gradle \
+    android/gradle/wrapper/gradle-wrapper.properties \
+    android/gradlew.bat \
+    android/AndroidManifest.xml \
+    android/gradle/wrapper/gradle-wrapper.jar \
+    android/gradlew \
+    android/res/values/libs.xml \
+    android/build.gradle \
+    android/gradle/wrapper/gradle-wrapper.properties \
+    android/gradlew.bat \
+    android/AndroidManifest.xml \
+    android/gradle/wrapper/gradle-wrapper.jar \
+    android/gradlew \
+    android/res/values/libs.xml \
+    android/build.gradle \
+    android/gradle/wrapper/gradle-wrapper.properties \
+    android/gradlew.bat \
+    android/AndroidManifest.xml \
+    android/gradle/wrapper/gradle-wrapper.jar \
+    android/gradlew \
+    android/res/values/libs.xml \
+    android/build.gradle \
+    android/gradle/wrapper/gradle-wrapper.properties \
+    android/gradlew.bat \
     android/AndroidManifest.xml \
     android/gradle/wrapper/gradle-wrapper.jar \
     android/gradlew \

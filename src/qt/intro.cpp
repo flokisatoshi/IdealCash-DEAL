@@ -14,6 +14,7 @@
 #include <QFileDialog>
 #include <QSettings>
 #include <QMessageBox>
+#include <QDesktopWidget>
 
 /* Minimum free space (in bytes) needed for data directory */
 static const uint64_t GB_BYTES = 1000000000LL;
@@ -112,6 +113,15 @@ Intro::Intro(QWidget *parent) :
     signalled(false)
 {
     ui->setupUi(this);
+    //android size changes
+        QFont font;
+        font.setFamily(font.defaultFamily());
+        QRect rec = QApplication::desktop()->screenGeometry();
+        int fS=std::max(7,(int)rec.width()/80);
+        font.setPointSize(fS);
+        this->setFont(font);
+        this->setFixedWidth((int)rec.width());
+        this->setFixedHeight((int)(rec.height()*0.8));
     ui->sizeWarningLabel->setText(ui->sizeWarningLabel->text().arg(BLOCK_CHAIN_SIZE/GB_BYTES));
     startThread();
 }

@@ -21,6 +21,10 @@
 #include <QSplashScreen>
 #include <QLibraryInfo>
 #include <QSettings>
+#include <QStyleFactory>
+#include <QDesktopWidget>
+#include <QtAndroidExtras/QtAndroid>
+#include <QtAndroidExtras>
 
 #if defined(BITCOIN_NEED_QT_PLUGINS) && !defined(_BITCOIN_QT_PLUGINS_INCLUDED)
 #define _BITCOIN_QT_PLUGINS_INCLUDED
@@ -36,6 +40,24 @@ Q_IMPORT_PLUGIN(qtaccessiblewidgets)
 // Need a global reference for the notifications to find the GUI
 static BitcoinGUI *guiref;
 static QSplashScreen *splashref;
+
+//Fixing Android sdcard storage access issue
+bool checkPermission() {
+
+QtAndroid::PermissionResult r = QtAndroid::checkPermission("android.permission.WRITE_EXTERNAL_STORAGE");
+    if(r == QtAndroid::PermissionResult::Denied) {
+        QtAndroid::requestPermissionsSync( QStringList() << "android.permission.WRITE_EXTERNAL_STORAGE" );
+        //QtAndroid::requestPermissionsSync( QStringList("android.permission.WRITE_EXTERNAL_STORAGE") );
+        //QtAndroid::requestPermissions( QStringList() << "android.permission.WRITE_EXTERNAL_STORAGE" );
+        //QtAndroid::requestPermissionsSync(QStringList() << "android.permission.STORAGE" );
+        r = QtAndroid::checkPermission("android.permission.WRITE_EXTERNAL_STORAGE");
+        if(r == QtAndroid::PermissionResult::Denied) {
+             return false;
+        }
+   }
+   return true;
+}
+
 
 /** Set up translations */
 static void initTranslations(QTranslator &qtTranslatorBase, QTranslator &qtTranslator, QTranslator &translatorBase, QTranslator &translator)
@@ -116,6 +138,11 @@ static void ThreadSafeHandleURI(const std::string& strURI)
 
 static void InitMessage(const std::string &message)
 {
+//    qputenv("QT_AUTO_SCREEN_SCALE_FACTOR", "2");
+//    QGuiApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
+        //testing android style
+//        QApplication::setStyle(QStyleFactory::create("android"));
+
     if(splashref)
     {
         splashref->showMessage(QString::fromStdString(message), Qt::AlignBottom|Qt::AlignHCenter, QColor(232,186,63));
@@ -145,9 +172,17 @@ static void handleRunawayException(std::exception *e)
     exit(1);
 }
 
+
+
 #ifndef BITCOIN_QT_TEST
 int main(int argc, char *argv[])
 {
+     checkPermission();
+//    qputenv("QT_AUTO_SCREEN_SCALE_FACTOR", QString("1").toLatin1());
+ //   qputenv("QT_SCALE_FACTOR", "0");
+//          QGuiApplication::setAttribute(Qt::AA_DisableHighDpiScaling);
+//    qputenv("QT_AUTO_SCREEN_SCALE_FACTOR", QString("2").toLatin1());
+
     // Do this early as we don't want to bother initializing if we are just calling IPC
     ipcScanRelay(argc, argv);
 
@@ -159,6 +194,13 @@ int main(int argc, char *argv[])
 
     Q_INIT_RESOURCE(bitcoin);
     QApplication app(argc, argv);
+
+    //enable high dpi scaling android
+    //qputenv("QT_SCALE_FACTOR", "0.5");
+    //qputenv("QT_AUTO_SCREEN_SCALE_FACTOR", "0.5");
+//    QGuiApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
+//        //testing android style
+//        QApplication::setStyle(QStyleFactory::create("android"));
 
     // Application identification (must be set before OptionsModel is initialized,
     // as it is used to locate QSettings)

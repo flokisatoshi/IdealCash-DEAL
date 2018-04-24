@@ -7,13 +7,13 @@
     <x>0</x>
     <y>0</y>
     <width>850</width>
-    <height>400</height>
+    <height>511</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Send Coins</string>
   </property>
-  <layout class="QVBoxLayout" name="verticalLayout" stretch="0,1,0">
+  <layout class="QVBoxLayout" name="verticalLayout" stretch="0,0,0,0,0,0">
    <property name="bottomMargin">
     <number>8</number>
    </property>
@@ -39,7 +39,7 @@
      </property>
      <layout class="QVBoxLayout" name="verticalLayoutCoinControl2">
       <property name="spacing">
-       <number>-1</number>
+       <number>6</number>
       </property>
       <property name="leftMargin">
        <number>0</number>
@@ -79,6 +79,7 @@
             </property>
             <property name="font">
              <font>
+              <pointsize>9</pointsize>
               <weight>75</weight>
               <bold>true</bold>
              </font>
@@ -173,7 +174,16 @@
            <string notr="true"/>
           </property>
           <layout class="QHBoxLayout" name="horizontalLayoutCoinControl5">
-           <property name="margin">
+           <property name="leftMargin">
+            <number>0</number>
+           </property>
+           <property name="topMargin">
+            <number>0</number>
+           </property>
+           <property name="rightMargin">
+            <number>0</number>
+           </property>
+           <property name="bottomMargin">
             <number>0</number>
            </property>
            <item>
@@ -217,7 +227,17 @@
                  </property>
                 </widget>
                </item>
-               <item row="0" column="1">
+               <item row="2" column="0">
+                <widget class="QLabel" name="labelCoinControlBytesText">
+                 <property name="styleSheet">
+                  <string notr="true">font-weight:bold;</string>
+                 </property>
+                 <property name="text">
+                  <string>Bytes:</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="1" column="0">
                 <widget class="QLabel" name="labelCoinControlQuantity">
                  <property name="font">
                   <font>
@@ -242,17 +262,7 @@
                  </property>
                 </widget>
                </item>
-               <item row="1" column="0">
-                <widget class="QLabel" name="labelCoinControlBytesText">
-                 <property name="styleSheet">
-                  <string notr="true">font-weight:bold;</string>
-                 </property>
-                 <property name="text">
-                  <string>Bytes:</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="1" column="1">
+               <item row="3" column="0">
                 <widget class="QLabel" name="labelCoinControlBytes">
                  <property name="font">
                   <font>
@@ -306,7 +316,17 @@
                  </property>
                 </widget>
                </item>
-               <item row="0" column="1">
+               <item row="2" column="0">
+                <widget class="QLabel" name="labelCoinControlPriorityText">
+                 <property name="styleSheet">
+                  <string notr="true">font-weight:bold;</string>
+                 </property>
+                 <property name="text">
+                  <string>Priority:</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="1" column="0">
                 <widget class="QLabel" name="labelCoinControlAmount">
                  <property name="font">
                   <font>
@@ -328,17 +348,7 @@
                  </property>
                 </widget>
                </item>
-               <item row="1" column="0">
-                <widget class="QLabel" name="labelCoinControlPriorityText">
-                 <property name="styleSheet">
-                  <string notr="true">font-weight:bold;</string>
-                 </property>
-                 <property name="text">
-                  <string>Priority:</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="1" column="1">
+               <item row="3" column="0">
                 <widget class="QLabel" name="labelCoinControlPriority">
                  <property name="font">
                   <font>
@@ -392,7 +402,17 @@
                  </property>
                 </widget>
                </item>
-               <item row="0" column="1">
+               <item row="2" column="0">
+                <widget class="QLabel" name="labelCoinControlLowOutputText">
+                 <property name="styleSheet">
+                  <string notr="true">font-weight:bold;</string>
+                 </property>
+                 <property name="text">
+                  <string>Low Output:</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="1" column="0">
                 <widget class="QLabel" name="labelCoinControlFee">
                  <property name="font">
                   <font>
@@ -414,17 +434,7 @@
                  </property>
                 </widget>
                </item>
-               <item row="1" column="0">
-                <widget class="QLabel" name="labelCoinControlLowOutputText">
-                 <property name="styleSheet">
-                  <string notr="true">font-weight:bold;</string>
-                 </property>
-                 <property name="text">
-                  <string>Low Output:</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="1" column="1">
+               <item row="3" column="0">
                 <widget class="QLabel" name="labelCoinControlLowOutput">
                  <property name="font">
                   <font>
@@ -478,7 +488,7 @@
                  </property>
                 </widget>
                </item>
-               <item row="0" column="1">
+               <item row="1" column="0">
                 <widget class="QLabel" name="labelCoinControlAfterFee">
                  <property name="font">
                   <font>
@@ -500,7 +510,7 @@
                  </property>
                 </widget>
                </item>
-               <item row="1" column="0">
+               <item row="2" column="0">
                 <widget class="QLabel" name="labelCoinControlChangeText">
                  <property name="styleSheet">
                   <string notr="true">font-weight:bold;</string>
@@ -510,7 +520,7 @@
                  </property>
                 </widget>
                </item>
-               <item row="1" column="1">
+               <item row="3" column="0">
                 <widget class="QLabel" name="labelCoinControlChange">
                  <property name="font">
                   <font>
@@ -555,8 +565,13 @@
           </property>
           <item>
            <widget class="QCheckBox" name="checkBoxCoinControlChange">
+            <property name="font">
+             <font>
+              <pointsize>9</pointsize>
+             </font>
+            </property>
             <property name="text">
-             <string>custom change address</string>
+             <string>custom change addr.</string>
             </property>
            </widget>
           </item>
@@ -626,11 +641,20 @@
         <x>0</x>
         <y>0</y>
         <width>830</width>
-        <height>165</height>
+        <height>136</height>
        </rect>
       </property>
       <layout class="QVBoxLayout" name="verticalLayout_2">
-       <property name="margin">
+       <property name="leftMargin">
+        <number>0</number>
+       </property>
+       <property name="topMargin">
+        <number>0</number>
+       </property>
+       <property name="rightMargin">
+        <number>0</number>
+       </property>
+       <property name="bottomMargin">
         <number>0</number>
        </property>
        <item>
@@ -658,6 +682,54 @@
     </widget>
    </item>
    <item>
+    <widget class="QLabel" name="label">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="text">
+      <string>Balance:</string>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QLabel" name="labelBalance">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="cursor">
+      <cursorShape>IBeamCursor</cursorShape>
+     </property>
+     <property name="text">
+      <string>123.456 DEAL</string>
+     </property>
+     <property name="textInteractionFlags">
+      <set>Qt::LinksAccessibleByMouse|Qt::TextSelectableByKeyboard|Qt::TextSelectableByMouse</set>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <spacer name="horizontalSpacer">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+     <property name="sizeType">
+      <enum>QSizePolicy::MinimumExpanding</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>40</width>
+       <height>20</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
+   <item>
     <layout class="QHBoxLayout" name="horizontalLayout">
      <item>
       <widget class="QPushButton" name="addButton">
@@ -665,7 +737,7 @@
         <string>Send to multiple recipients at once</string>
        </property>
        <property name="text">
-        <string>Add &amp;Recipient</string>
+        <string/>
        </property>
        <property name="icon">
         <iconset resource="../bitcoin.qrc">
@@ -688,7 +760,7 @@
         <string>Remove all transaction fields</string>
        </property>
        <property name="text">
-        <string>Clear &amp;All</string>
+        <string/>
        </property>
        <property name="icon">
         <iconset resource="../bitcoin.qrc">
@@ -766,7 +838,7 @@
         <string>Confirm the send action</string>
        </property>
        <property name="text">
-        <string>S&amp;end</string>
+        <string/>
        </property>
        <property name="icon">
         <iconset resource="../bitcoin.qrc">

@@ -12,6 +12,7 @@
 #include <QClipboard>
 #include <QMessageBox>
 #include <QMenu>
+#include <QDesktopWidget>
 
 #ifdef USE_QRCODE
 #include "qrcodedialog.h"
@@ -26,6 +27,15 @@ AddressBookPage::AddressBookPage(Mode mode, Tabs tab, QWidget *parent) :
     tab(tab)
 {
     ui->setupUi(this);
+    //adding android size code
+//            QFont font;
+//            font.setFamily(font.defaultFamily());
+//            QRect rec = QApplication::desktop()->screenGeometry();
+//            int fS=std::max(7,(int)rec.width()/80);
+//            font.setPointSize(fS);
+//            this->setFont(font);
+//            this->setFixedWidth((int)rec.width());
+//            this->setFixedHeight((int)(rec.height()*0.8));
 
 #ifdef Q_OS_MAC // Icons on push buttons are very uncommon on Mac
     ui->newAddressButton->setIcon(QIcon());

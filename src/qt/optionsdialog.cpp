@@ -10,6 +10,7 @@
 #include <QIntValidator>
 #include <QLocale>
 #include <QMessageBox>
+#include <QDesktopWidget>
 #include <QRegExp>
 #include <QRegExpValidator>
 
@@ -23,6 +24,15 @@ OptionsDialog::OptionsDialog(QWidget *parent) :
     fProxyIpValid(true)
 {
     ui->setupUi(this);
+//adding android size code
+        QFont font;
+        font.setFamily(font.defaultFamily());
+        QRect rec = QApplication::desktop()->screenGeometry();
+        int fS=std::max(7,(int)rec.width()/80);
+        font.setPointSize(fS);
+        this->setFont(font);
+        this->setFixedWidth((int)rec.width());
+        this->setFixedHeight((int)(rec.height()*0.8));
 
     /* Network elements init */
 #ifndef USE_UPNP

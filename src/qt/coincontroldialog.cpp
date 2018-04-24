@@ -20,6 +20,7 @@
 #include <QString>
 #include <QTreeWidget>
 #include <QTreeWidgetItem>
+#include <QDesktopWidget>
 
 using namespace std;
 QList<qint64> CoinControlDialog::payAmounts;
@@ -31,6 +32,15 @@ CoinControlDialog::CoinControlDialog(QWidget *parent) :
     model(0)
 {
     ui->setupUi(this);
+    //adding android size code
+            QFont font;
+            font.setFamily(font.defaultFamily());
+            QRect rec = QApplication::desktop()->screenGeometry();
+            int fS=std::max(7,(int)rec.width()/80);
+            font.setPointSize(fS);
+            this->setFont(font);
+            this->setFixedWidth((int)rec.width());
+            this->setFixedHeight((int)(rec.height()*0.8));
 
     // context menu actions
     QAction *copyAddressAction = new QAction(tr("Copy address"), this);

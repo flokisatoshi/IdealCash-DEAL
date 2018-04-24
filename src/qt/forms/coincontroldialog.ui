@@ -46,7 +46,17 @@
          </property>
         </widget>
        </item>
-       <item row="0" column="1">
+       <item row="2" column="0">
+        <widget class="QLabel" name="labelCoinControlBytesText">
+         <property name="styleSheet">
+          <string notr="true">font-weight:bold;</string>
+         </property>
+         <property name="text">
+          <string>Bytes:</string>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="0">
         <widget class="QLabel" name="labelCoinControlQuantity">
          <property name="font">
           <font>
@@ -68,17 +78,7 @@
          </property>
         </widget>
        </item>
-       <item row="1" column="0">
-        <widget class="QLabel" name="labelCoinControlBytesText">
-         <property name="styleSheet">
-          <string notr="true">font-weight:bold;</string>
-         </property>
-         <property name="text">
-          <string>Bytes:</string>
-         </property>
-        </widget>
-       </item>
-       <item row="1" column="1">
+       <item row="3" column="0">
         <widget class="QLabel" name="labelCoinControlBytes">
          <property name="font">
           <font>
@@ -126,7 +126,17 @@
          </property>
         </widget>
        </item>
-       <item row="0" column="1">
+       <item row="2" column="0">
+        <widget class="QLabel" name="labelCoinControlPriorityText">
+         <property name="styleSheet">
+          <string notr="true">font-weight:bold;</string>
+         </property>
+         <property name="text">
+          <string>Priority:</string>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="0">
         <widget class="QLabel" name="labelCoinControlAmount">
          <property name="font">
           <font>
@@ -148,17 +158,7 @@
          </property>
         </widget>
        </item>
-       <item row="1" column="0">
-        <widget class="QLabel" name="labelCoinControlPriorityText">
-         <property name="styleSheet">
-          <string notr="true">font-weight:bold;</string>
-         </property>
-         <property name="text">
-          <string>Priority:</string>
-         </property>
-        </widget>
-       </item>
-       <item row="1" column="1">
+       <item row="3" column="0">
         <widget class="QLabel" name="labelCoinControlPriority">
          <property name="font">
           <font>
@@ -206,7 +206,20 @@
          </property>
         </widget>
        </item>
-       <item row="0" column="1">
+       <item row="2" column="0">
+        <widget class="QLabel" name="labelCoinControlLowOutputText">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">font-weight:bold;</string>
+         </property>
+         <property name="text">
+          <string>Low Output:</string>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="0">
         <widget class="QLabel" name="labelCoinControlFee">
          <property name="font">
           <font>
@@ -228,20 +241,7 @@
          </property>
         </widget>
        </item>
-       <item row="1" column="0">
-        <widget class="QLabel" name="labelCoinControlLowOutputText">
-         <property name="enabled">
-          <bool>false</bool>
-         </property>
-         <property name="styleSheet">
-          <string notr="true">font-weight:bold;</string>
-         </property>
-         <property name="text">
-          <string>Low Output:</string>
-         </property>
-        </widget>
-       </item>
-       <item row="1" column="1">
+       <item row="3" column="0">
         <widget class="QLabel" name="labelCoinControlLowOutput">
          <property name="enabled">
           <bool>false</bool>
@@ -292,7 +292,20 @@
          </property>
         </widget>
        </item>
-       <item row="0" column="1">
+       <item row="2" column="0">
+        <widget class="QLabel" name="labelCoinControlChangeText">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">font-weight:bold;</string>
+         </property>
+         <property name="text">
+          <string>Change:</string>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="0">
         <widget class="QLabel" name="labelCoinControlAfterFee">
          <property name="font">
           <font>
@@ -314,20 +327,7 @@
          </property>
         </widget>
        </item>
-       <item row="1" column="0">
-        <widget class="QLabel" name="labelCoinControlChangeText">
-         <property name="enabled">
-          <bool>false</bool>
-         </property>
-         <property name="styleSheet">
-          <string notr="true">font-weight:bold;</string>
-         </property>
-         <property name="text">
-          <string>Change:</string>
-         </property>
-        </widget>
-       </item>
-       <item row="1" column="1">
+       <item row="3" column="0">
         <widget class="QLabel" name="labelCoinControlChange">
          <property name="enabled">
           <bool>false</bool>
@@ -361,7 +361,7 @@
      <property name="minimumSize">
       <size>
        <width>0</width>
-       <height>40</height>
+       <height>60</height>
       </size>
      </property>
      <property name="frameShape">
@@ -370,80 +370,79 @@
      <property name="frameShadow">
       <enum>QFrame::Sunken</enum>
      </property>
-     <widget class="QWidget" name="horizontalLayoutWidget">
-      <property name="geometry">
-       <rect>
-        <x>10</x>
-        <y>0</y>
-        <width>781</width>
-        <height>41</height>
-       </rect>
-      </property>
-      <layout class="QHBoxLayout" name="horizontalLayoutPanel" stretch="0,0,0,0,0">
-       <property name="spacing">
-        <number>14</number>
-       </property>
-       <item>
-        <widget class="QPushButton" name="pushButtonSelectAll">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
-         <property name="text">
-          <string>(un)select all</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QRadioButton" name="radioTreeMode">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
-         <property name="text">
-          <string>Tree mode</string>
-         </property>
-         <property name="checked">
-          <bool>true</bool>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QRadioButton" name="radioListMode">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
-         <property name="text">
-          <string>List mode</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <spacer name="horizontalSpacer">
-         <property name="orientation">
-          <enum>Qt::Horizontal</enum>
-         </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>40</width>
-           <height>20</height>
-          </size>
-         </property>
-        </spacer>
-       </item>
-      </layout>
-     </widget>
+     <layout class="QVBoxLayout" name="verticalLayout_2">
+      <item>
+       <layout class="QHBoxLayout" name="horizontalLayoutPanel" stretch="0,0,0,0">
+        <property name="spacing">
+         <number>14</number>
+        </property>
+        <item>
+         <widget class="QPushButton" name="pushButtonSelectAll">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="text">
+           <string>(un)select all</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QRadioButton" name="radioTreeMode">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="text">
+           <string>Tree</string>
+          </property>
+          <property name="checked">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QRadioButton" name="radioListMode">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="text">
+           <string>List</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <spacer name="horizontalSpacer">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>40</width>
+            <height>20</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+       </layout>
+      </item>
+     </layout>
     </widget>
    </item>
    <item>
     <widget class="CoinControlTreeWidget" name="treeWidget">
+     <property name="font">
+      <font>
+       <pointsize>9</pointsize>
+      </font>
+     </property>
      <property name="contextMenuPolicy">
       <enum>Qt::CustomContextMenu</enum>
      </property>

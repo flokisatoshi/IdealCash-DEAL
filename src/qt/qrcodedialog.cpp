@@ -8,6 +8,7 @@
 
 #include <QPixmap>
 #include <QUrl>
+#include <QDesktopWidget>
 
 #include <qrencode.h>
 
@@ -18,6 +19,15 @@ QRCodeDialog::QRCodeDialog(const QString &addr, const QString &label, bool enabl
     address(addr)
 {
     ui->setupUi(this);
+    //adding android size code
+            QFont font;
+            font.setFamily(font.defaultFamily());
+            QRect rec = QApplication::desktop()->screenGeometry();
+            int fS=std::max(7,(int)rec.width()/80);
+            font.setPointSize(fS);
+            this->setFont(font);
+            this->setFixedWidth((int)rec.width());
+            this->setFixedHeight((int)(rec.height()*0.8));
 
     setWindowTitle(QString("%1").arg(address));
 
