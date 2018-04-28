@@ -9,7 +9,7 @@ New Projects 2018
 ------------------------------
 
 Android Mobile Wallet
-+Staking has been added
++Staking has been added please head over to the android_dev branch
 
 ------------------------------------------------------------
 
