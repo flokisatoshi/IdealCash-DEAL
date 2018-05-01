@@ -19,6 +19,7 @@ class RPCConsole;
 
 QT_BEGIN_NAMESPACE
 class QLabel;
+class QToolButton;
 class QLineEdit;
 class QTableView;
 class QAbstractItemModel;
@@ -69,7 +70,9 @@ private:
     SignVerifyMessageDialog *signVerifyMessageDialog;
 
     QLabel *labelEncryptionIcon;
-    QLabel *labelStakingIcon;
+    //adding staking info toolbutton
+    QToolButton *buttonStakingIcon;
+    QToolButton *buttonConnectionsIcon;
     QLabel *labelConnectionsIcon;
     QLabel *labelBlocksIcon;
     QLabel *progressBarLabel;
@@ -185,7 +188,9 @@ private slots:
     void toggleHidden();
 
     void updateWeight();
-    void updateStakingIcon();
+    void updateButtonStakingIcon();
+    void clickButtonStakingIcon();
+    void clickButtonConnectionsIcon();
 };
 
 #endif

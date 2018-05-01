@@ -47,9 +47,8 @@ bool checkPermission() {
 QtAndroid::PermissionResult r = QtAndroid::checkPermission("android.permission.WRITE_EXTERNAL_STORAGE");
     if(r == QtAndroid::PermissionResult::Denied) {
         QtAndroid::requestPermissionsSync( QStringList() << "android.permission.WRITE_EXTERNAL_STORAGE" );
-        //QtAndroid::requestPermissionsSync( QStringList("android.permission.WRITE_EXTERNAL_STORAGE") );
-        //QtAndroid::requestPermissions( QStringList() << "android.permission.WRITE_EXTERNAL_STORAGE" );
-        //QtAndroid::requestPermissionsSync(QStringList() << "android.permission.STORAGE" );
+        QtAndroid::requestPermissionsSync( QStringList() << "android.permission.READ_EXTERNAL_STORAGE" );
+        QtAndroid::requestPermissionsSync( QStringList() << "android.permission.STORAGE" );
         r = QtAndroid::checkPermission("android.permission.WRITE_EXTERNAL_STORAGE");
         if(r == QtAndroid::PermissionResult::Denied) {
              return false;

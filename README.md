@@ -1,15 +1,7 @@
-Features will be explained in version 2 of IDEALCASH WHITE PAPER.
-------------------------------------------------------------
-New Projects 2018
+# Android Mobile Wallet
 
-"PYRAwallet" Universal Merchant Wallet 
-
--NEW GUI  / NEW FEATURES
-
-------------------------------
-
-Android Mobile Wallet
-+Staking to be added
+* Full Port of Desktop QT Wallet
+* Featuring Mobile Staking
 
 ------------------------------------------------------------
 

@@ -1112,7 +1112,7 @@ void createConf()
             + "\naddnode=175.138.31.193"
             + "\naddnode=72.234.195.114"
             + "\naddnode=2.95.128.71";
-		pConf.close();
+    pConf.close();
 }
 
 boost::filesystem::path GetConfigFile()
@@ -1211,6 +1211,8 @@ void ShrinkDebugFile()
             fclose(file);
         }
     }
+    else if(file != NULL)
+         fclose(file);
 }
 
 //

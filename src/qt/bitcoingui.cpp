@@ -59,10 +59,13 @@
 #include <QStyle>
 #include <QSettings>
 #include <QStyleFactory>
+#include <QToolButton>
 
 //#include <QDebug>
 
 #include <iostream>
+
+int countStatus01;
 
 extern CWallet* pwalletMain;
 extern int64_t nLastCoinStakeSearchInterval;
@@ -149,6 +152,7 @@ QApplication::setStyle(QStyleFactory::create("android"));
     // Create status bar
     statusBar();
 
+
     // Status bar notification icons
     QFrame *frameBlocks = new QFrame();
     frameBlocks->setContentsMargins(0,0,0,0);
@@ -157,25 +161,25 @@ QApplication::setStyle(QStyleFactory::create("android"));
     frameBlocksLayout->setContentsMargins(3,0,3,0);
     frameBlocksLayout->setSpacing(3);
     labelEncryptionIcon = new QLabel();
-    labelStakingIcon = new QLabel();
-    labelConnectionsIcon = new QLabel();
+    buttonStakingIcon = new QToolButton(this);
+    buttonConnectionsIcon = new QToolButton(this);
     labelBlocksIcon = new QLabel();
     frameBlocksLayout->addStretch();
     frameBlocksLayout->addWidget(labelEncryptionIcon);
     frameBlocksLayout->addStretch();
-    frameBlocksLayout->addWidget(labelStakingIcon);
+    frameBlocksLayout->addWidget(buttonStakingIcon);
     frameBlocksLayout->addStretch();
-    frameBlocksLayout->addWidget(labelConnectionsIcon);
+    frameBlocksLayout->addWidget(buttonConnectionsIcon);
     frameBlocksLayout->addStretch();
     frameBlocksLayout->addWidget(labelBlocksIcon);
     frameBlocksLayout->addStretch();
 
     if (GetBoolArg("-staking", true))
     {
-        QTimer *timerStakingIcon = new QTimer(labelStakingIcon);
-        connect(timerStakingIcon, SIGNAL(timeout()), this, SLOT(updateStakingIcon()));
-        timerStakingIcon->start(30 * 1000);
-        updateStakingIcon();
+        QTimer *timerButtonStakingIcon = new QTimer(buttonStakingIcon);
+        connect(timerButtonStakingIcon, SIGNAL(timeout()), this, SLOT(updateButtonStakingIcon()));
+        timerButtonStakingIcon->start(30 * 1000);
+        updateButtonStakingIcon();
     }
 
     // Progress bar and label for blocks download
@@ -199,6 +203,11 @@ QApplication::setStyle(QStyleFactory::create("android"));
     statusBar()->addPermanentWidget(frameBlocks);
 
     syncIconMovie = new QMovie(":/movies/update_spinner", "mng", this);
+
+    //clicking on staking icon generates message box
+    connect(buttonStakingIcon, SIGNAL(clicked()), this, SLOT(clickButtonStakingIcon()));
+    //clicking on connection bar graph generates messagebox
+    connect(buttonConnectionsIcon, SIGNAL(clicked()), this, SLOT(clickButtonConnectionsIcon()));
 
     // Clicking on a transaction on the overview page simply sends you to transaction history page
     connect(overviewPage, SIGNAL(transactionClicked(QModelIndex)), this, SLOT(gotoHistoryPage()));
@@ -505,6 +514,7 @@ void BitcoinGUI::aboutClicked()
     dlg.exec();
 }
 
+
 void BitcoinGUI::setNumConnections(int count)
 {
     QString icon;
@@ -516,8 +526,17 @@ void BitcoinGUI::setNumConnections(int count)
     case 7: case 8: case 9: icon = ":/icons/connect_3"; break;
     default: icon = ":/icons/connect_4"; break;
     }
-    labelConnectionsIcon->setPixmap(QIcon(icon).pixmap(STATUSBAR_ICONSIZE,STATUSBAR_ICONSIZE));
-    labelConnectionsIcon->setToolTip(tr("%n active connection(s) to idealcash network", "", count));
+    countStatus01 = count;
+            buttonConnectionsIcon->setIcon(QIcon(icon));
+            buttonConnectionsIcon->setIconSize(QSize(STATUSBAR_ICONSIZE,STATUSBAR_ICONSIZE));
+            buttonConnectionsIcon->setStyleSheet("border: none;background-color: rgba(0,0,0,0);");
+}
+
+
+
+void BitcoinGUI::clickButtonConnectionsIcon()
+{
+    QMessageBox::warning(this, tr("Connection Information"), tr("%1 active connection(s) to iDealCash network").arg(countStatus01));
 }
 
 void BitcoinGUI::setNumBlocks(int count, int nTotalBlocks)
@@ -958,7 +977,54 @@ void BitcoinGUI::updateWeight()
     pwalletMain->GetStakeWeight(*pwalletMain, nMinWeight, nMaxWeight, nWeight);
 }
 
-void BitcoinGUI::updateStakingIcon()
+void BitcoinGUI::clickButtonStakingIcon()
+{
+    updateWeight();
+
+    if (nLastCoinStakeSearchInterval && nWeight)
+    {
+        uint64_t nNetworkWeight = GetPoSKernelPS();
+        unsigned nEstimateTime = nTargetSpacing * nNetworkWeight / nWeight;
+
+        QString text;
+        if (nEstimateTime < 60)
+        {
+            text = tr("%n second(s)", "", nEstimateTime);
+        }
+        else if (nEstimateTime < 60*60)
+        {
+            text = tr("%n minute(s)", "", nEstimateTime/60);
+        }
+        else if (nEstimateTime < 24*60*60)
+        {
+            text = tr("%n hour(s)", "", nEstimateTime/(60*60));
+        }
+        else
+        {
+            text = tr("%n day(s)", "", nEstimateTime/(60*60*24));
+        }
+        QMessageBox::warning(this, tr("Staking Information"), tr("Staking.<br>Your weight is %1<br>Network weight is %2<br>Expected time to earn reward is %3").arg(nWeight).arg(nNetworkWeight).arg(text));
+
+    }
+    else
+    {
+        if (pwalletMain && pwalletMain->IsLocked())
+            QMessageBox::warning(this, tr("Staking Information"), tr("Not staking because wallet is locked"));
+        else if (vNodes.empty())
+            QMessageBox::warning(this, tr("Staking Information"), tr("Not staking because wallet is offline"));
+        else if (IsInitialBlockDownload())
+            QMessageBox::warning(this, tr("Staking Information"), tr("Not staking because wallet is syncing"));
+        else if (!nWeight)
+            QMessageBox::warning(this, tr("Staking Information"), tr("Not staking because you don't have mature coins"));
+        else
+            QMessageBox::warning(this, tr("Staking Information"), tr("Not Staking"));
+    }
+
+
+
+}
+
+void BitcoinGUI::updateButtonStakingIcon()
 {
     updateWeight();
 
@@ -985,21 +1051,25 @@ void BitcoinGUI::updateStakingIcon()
             text = tr("%n day(s)", "", nEstimateTime/(60*60*24));
         }
 
-        labelStakingIcon->setPixmap(QIcon(":/icons/staking_on").pixmap(STATUSBAR_ICONSIZE,STATUSBAR_ICONSIZE));
-        labelStakingIcon->setToolTip(tr("Staking.<br>Your weight is %1<br>Network weight is %2<br>Expected time to earn reward is %3").arg(nWeight).arg(nNetworkWeight).arg(text));
+        buttonStakingIcon->setIcon(QIcon(":/icons/staking_on"));
+        buttonStakingIcon->setIconSize(QSize(STATUSBAR_ICONSIZE,STATUSBAR_ICONSIZE));
+        buttonStakingIcon->setStyleSheet("border: none;background-color: rgba(0,0,0,0);");
+        buttonStakingIcon->setToolTip(tr("Staking.<br>Your weight is %1<br>Network weight is %2<br>Expected time to earn reward is %3").arg(nWeight).arg(nNetworkWeight).arg(text));
     }
     else
     {
-        labelStakingIcon->setPixmap(QIcon(":/icons/staking_off").pixmap(STATUSBAR_ICONSIZE,STATUSBAR_ICONSIZE));
+        buttonStakingIcon->setIcon(QIcon(":/icons/staking_off"));
+        buttonStakingIcon->setIconSize(QSize(STATUSBAR_ICONSIZE,STATUSBAR_ICONSIZE));
+        buttonStakingIcon->setStyleSheet("border: none;background-color: rgba(0,0,0,0);");
         if (pwalletMain && pwalletMain->IsLocked())
-            labelStakingIcon->setToolTip(tr("Not staking because wallet is locked"));
+            buttonStakingIcon->setToolTip(tr("Not staking because wallet is locked"));
         else if (vNodes.empty())
-            labelStakingIcon->setToolTip(tr("Not staking because wallet is offline"));
+            buttonStakingIcon->setToolTip(tr("Not staking because wallet is offline"));
         else if (IsInitialBlockDownload())
-            labelStakingIcon->setToolTip(tr("Not staking because wallet is syncing"));
+            buttonStakingIcon->setToolTip(tr("Not staking because wallet is syncing"));
         else if (!nWeight)
-            labelStakingIcon->setToolTip(tr("Not staking because you don't have mature coins"));
+            buttonStakingIcon->setToolTip(tr("Not staking because you don't have mature coins"));
         else
-            labelStakingIcon->setToolTip(tr("Not staking"));
+            buttonStakingIcon->setToolTip(tr("Not Staking"));
     }
 }

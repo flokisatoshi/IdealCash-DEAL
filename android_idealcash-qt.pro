@@ -92,8 +92,6 @@ android {
 #                $$NDK_PATH/platforms/android-9/arch-arm/usr/include/ \
 #                $$NDK_PATH/sources/cxx-stl/stlport/stlport/ -I $NDK_PATH/sources/cxx-stl/system/include/
 
-#\
-#		$$MINIUPNP_PATH/miniupnp-2.0/include \
 #        DISTFILES += AndroidManifest.xml
 
 #        ANDROID_PACKAGE_SOURCE_DIR = $$PWD/
