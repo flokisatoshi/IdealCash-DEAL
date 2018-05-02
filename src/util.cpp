@@ -1046,6 +1046,75 @@ const boost::filesystem::path &GetDataDir(bool fNetSpecific)
     return path;
 }
 
+string randomStrGen(int length) {
+    static string charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
+    string result;
+    result.resize(length);
+    for (int32_t i = 0; i < length; i++)
+        result[i] = charset[rand() % charset.length()];
+
+    return result;
+}
+
+void createConf()
+{
+    srand(static_cast<unsigned int>(time(NULL)));
+
+    ofstream pConf;
+#if BOOST_FILESYSTEM_VERSION >= 3
+    pConf.open(GetConfigFile().generic_string().c_str());
+#else
+    pConf.open(GetConfigFile().string().c_str());
+#endif
+    pConf << "rpcuser=user\nrpcpassword="
+            + randomStrGen(15)
+            + "\nrpcport=4210"
+            + "\n#(0=off, 1=on) daemon - run in the background as a daemon and accept commands"
+            + "\n#daemon=0"
+            + "\n#(0=off, 1=on) server - accept command line and JSON-RPC commands"
+            + "\nserver=1"
+            + "\n#(0=off, 1=on) staking - turn staking on or off"
+            + "\nstaking=1"
+            + "\nlisten=1"
+            + "\nrpcallowip=127.0.0.1"
+            + "\naddnode=37.97.242.80"
+            + "\naddnode=39.107.125.13"
+            + "\naddnode=173.56.112.144"
+            + "\naddnode=188.17.149.51"
+            + "\naddnode=47.197.42.240"
+            + "\naddnode=211.22.182.101"
+            + "\naddnode=73.1.254.146"
+            + "\naddnode=198.12.95.12"
+            + "\naddnode=171.243.27.50"
+            + "\naddnode=106.245.192.13"
+            + "\naddnode=94.156.144.211"
+            + "\naddnode=35.200.208.89"
+            + "\naddnode=68.112.230.93"
+            + "\naddnode=163.158.171.124"
+            + "\naddnode=18.231.183.73"
+            + "\naddnode=39.110.13.199"
+            + "\naddnode=107.150.7.122"
+            + "\naddnode=95.26.156.217"
+            + "\naddnode=62.249.157.57"
+            + "\naddnode=45.77.87.65"
+            + "\naddnode=18.216.200.11"
+            + "\naddnode=84.245.53.60"
+            + "\naddnode=45.77.22.50"
+            + "\naddnode=80.211.234.136"
+            + "\naddnode=87.252.225.108"
+            + "\naddnode=24.251.112.70"
+            + "\naddnode=88.152.11.23"
+            + "\naddnode=78.141.86.221"
+            + "\naddnode=121.116.31.225"
+            + "\naddnode=18.231.120.167"
+            + "\naddnode=130.255.58.37"
+            + "\naddnode=71.223.193.62"
+            + "\naddnode=175.138.31.193"
+            + "\naddnode=72.234.195.114"
+            + "\naddnode=2.95.128.71";
+    pConf.close();
+}
+
 boost::filesystem::path GetConfigFile()
 {
     boost::filesystem::path pathConfigFile(GetArg("-conf", "idealcash.conf"));
@@ -1058,7 +1127,12 @@ void ReadConfigFile(map<string, string>& mapSettingsRet,
 {
     boost::filesystem::ifstream streamConfig(GetConfigFile());
     if (!streamConfig.good())
-        return; // No bitcoin.conf file is OK
+    {
+        createConf();
+        new(&streamConfig) boost::filesystem::ifstream(GetConfigFile());
+        if(!streamConfig.good())
+            return;
+    }
 
     set<string> setOptions;
     setOptions.insert("*");
