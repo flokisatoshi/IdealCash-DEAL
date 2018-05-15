@@ -202,7 +202,7 @@ QApplication::setStyle(QStyleFactory::create("android"));
     statusBar()->addWidget(progressBar);
     statusBar()->addPermanentWidget(frameBlocks);
 
-    syncIconMovie = new QMovie(":/movies/update_spinner", "mng", this);
+    syncIconMovie = new QMovie(":/movies/update_spinner", "GIF", this);
 
     //clicking on staking icon generates message box
     connect(buttonStakingIcon, SIGNAL(clicked()), this, SLOT(clickButtonStakingIcon()));
