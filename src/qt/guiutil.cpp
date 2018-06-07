@@ -511,9 +511,9 @@ void SetBlackThemeQSS(QApplication& app)
                       //"QStackedWidget { border-image: url(:/images/backg); }"
                       "QFrame         { border: none; }"
                       //overview page balance frame
-                      "QFrame#frame   { background-color: transparent; }"
+                      "QFrame#frame   { background-color: rgba(0,0,0,100); border-bottom: 3px solid rgba(0,0,0,50); border-right: 3px solid rgba(0,0,0,50); }"
                       //overview page recent transactions frame
-                      "QFrame#frame_2 { background-color: transparent; }"
+                      "QFrame#frame_2 { background-color: rgba(0,0,0,100); border-bottom: 3px solid rgba(0,0,0,50); border-right: 3px solid rgba(0,0,0,50); }"
                       //overview page recent tranactions list
                       "#listTransactions { color: #969675; }"
                       "QComboBox      { color: rgb(255,255,255); }"
