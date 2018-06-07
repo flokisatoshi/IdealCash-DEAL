@@ -80,7 +80,7 @@ BitcoinGUI::BitcoinGUI(QWidget *parent):
     rpcConsole(0),
     nWeight(0)
 {
-    resize(850, 650);
+    resize(850, 570);
     setWindowTitle(tr("idealcash") + " - " + tr("Wallet"));
 
 #ifndef Q_OS_MAC
