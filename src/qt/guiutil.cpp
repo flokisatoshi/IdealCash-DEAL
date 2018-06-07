@@ -508,7 +508,7 @@ void HelpMessageBox::showOrPrint()
 void SetBlackThemeQSS(QApplication& app)
 {
     app.setStyleSheet("QWidget        { background: rgb(41,44,48); }"
-                      //"QStackedWidget { border-image: url(:/images/backg); }"
+                      "QStackedWidget { border-image: url(:/images/backg); }"
                       "QFrame         { border: none; }"
                       //overview page balance frame
                       "QFrame#frame   { background-color: rgba(0,0,0,100); border-bottom: 3px solid rgba(0,0,0,50); border-right: 3px solid rgba(0,0,0,50); }"
