@@ -552,6 +552,7 @@ void SetBlackThemeQSS(QApplication& app)
                       "QHeaderView::section { background: rgb(29,34,39); color: rgb(255,255,255); }"
                       //toolbar to left setting background color
                       "QToolBar       { background: #1e2024; border: none; }"
+                      "QToolButton::hover { color: #000000; background: #e09900; }"
                       //status bar on bottom setting background color
                       "QStatusBar{background: #1e2024; border-top: none;}");
 }

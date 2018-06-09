@@ -59,6 +59,10 @@
 #include <QDragEnterEvent>
 #include <QUrl>
 #include <QStyle>
+#include <QFile>
+#include <QTextStream>
+#include <QSignalMapper>
+#include <QSettings>
 
 #include <iostream>
 
@@ -92,6 +96,11 @@ BitcoinGUI::BitcoinGUI(QWidget *parent):
 #endif
     // Accept D&D of URIs
     setAcceptDrops(true);
+
+        /* zeewolf: Hot swappable wallet themes */
+    // Discover themes
+    listThemes(themesList);
+    /* /zeewolf: Hot swappable wallet themes */
 
     // Create actions for the toolbar, menu bar and tray/dock icon
     createActions();
@@ -324,6 +333,28 @@ void BitcoinGUI::createActions()
     connect(lockWalletAction, SIGNAL(triggered()), this, SLOT(lockWallet()));
     connect(signMessageAction, SIGNAL(triggered()), this, SLOT(gotoSignMessageTab()));
     connect(verifyMessageAction, SIGNAL(triggered()), this, SLOT(gotoVerifyMessageTab()));
+
+        /* zeewolf: Hot swappable wallet themes */
+    if (themesList.count()>0)
+    {
+        QSignalMapper* signalMapper = new QSignalMapper (this) ;
+        //QActionGroup* menuActionGroup = new QActionGroup( this );
+        //menuActionGroup->setExclusive(true);
+
+        // Add custom themes (themes directory)
+        for( int i=0; i < themesList.count(); i++ )
+        {
+            QString theme=themesList[i];
+            customActions[i] = new QAction(QIcon(":/icons/options"), theme, this);
+            customActions[i]->setToolTip(QString("Switch to " + theme + " theme"));
+            customActions[i]->setStatusTip(QString("Switch to " + theme + " theme"));
+            //customActions[i]->setActionGroup(menuActionGroup);
+            signalMapper->setMapping(customActions[i], theme);
+            connect(customActions[i], SIGNAL(triggered()), signalMapper, SLOT (map()));
+        }
+        connect(signalMapper, SIGNAL(mapped(QString)), this, SLOT(changeTheme(QString)));
+    }
+    /* zeewolf: Hot swappable wallet themes */
 }
 
 void BitcoinGUI::createMenuBar()
@@ -343,6 +374,10 @@ void BitcoinGUI::createMenuBar()
     file->addAction(signMessageAction);
     file->addAction(verifyMessageAction);
     file->addSeparator();
+    for (int i = 0; i < themesList.count(); i++) {
+        file->addAction(customActions[i]);
+    }
+    file->addSeparator();
     file->addAction(quitAction);
 
     QMenu *settings = appMenuBar->addMenu(tr("&Settings"));
@@ -353,6 +388,8 @@ void BitcoinGUI::createMenuBar()
     settings->addAction(multiSendAction);
     settings->addSeparator();
     settings->addAction(optionsAction);
+
+    /* zeewolf: Hot swappable wallet themes */
 
     QMenu *help = appMenuBar->addMenu(tr("&Help"));
     help->addAction(openRPCConsoleAction);
@@ -375,11 +412,16 @@ void BitcoinGUI::createToolBars()
     toolbar->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
     toolbar->setContextMenuPolicy(Qt::PreventContextMenu);
     toolbar->setMaximumWidth(150);
-    QWidget* header = new QWidget();
-    header->setMinimumSize(200, 150);
-    header->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
-    header->setStyleSheet("QWidget { background-color: #e09900; background-repeat: no-repeat; background-image: url(:/images/header); }");
-	toolbar->addWidget(header);
+    toolbar->setMinimumWidth(150);
+
+    QLabel* header1 = new QLabel(this);
+    header1->setObjectName("header1");
+    //header1->setMinimumSize(200, 150);
+    //header1->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
+    //header1->setStyleSheet("QLabel { background-color: #e09900; }");
+    header1->setPixmap(QPixmap(":/images/header"));
+
+	toolbar->addWidget(header1);
         //toolbar->addWidget(TBarSpacer1());
 
     toolbar->addAction(overviewAction);
@@ -390,11 +432,14 @@ void BitcoinGUI::createToolBars()
     toolbar->addAction(exportAction);
     toolbar->addAction(blockAction);
     
-    QWidget* footer = new QWidget();
-    footer->setMinimumSize(150, 50);
-    footer->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
-    footer->setStyleSheet("QWidget { background-color: #1e2024; background-repeat: no-repeat; background-image: url(:/images/footer); }");
-	toolbar->addWidget(footer);
+    QLabel* footer1 = new QLabel(this);
+    footer1->setObjectName("footer1");
+    //footer->setMinimumSize(150, 50);
+    //footer->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
+    //footer->setStyleSheet("QWidget { background-color: #1e2024; background-repeat: no-repeat; background-image: url(:/images/footer); }");
+    //footer1->setStyleSheet("QLabel { background-color: #1e2024; }");
+    footer1->setPixmap(QPixmap(":/images/footer"));
+	toolbar->addWidget(footer1);
 //#e09900
 //#1e2024
     //toolbar->addWidget(TBarSpacer1());
@@ -1083,3 +1128,152 @@ void BitcoinGUI::updateStakingIcon()
             labelStakingIcon->setToolTip(tr("Not staking"));
     }
 }
+/* zeewolf: Hot swappable wallet themes */
+void BitcoinGUI::changeTheme(QString theme)
+{
+    // load Default theme first (if present) to apply default styles
+    loadTheme("Default");
+
+    if (theme != "Default") {
+        loadTheme(theme);
+    }
+}
+
+void BitcoinGUI::loadTheme(QString theme)
+{
+    // template variables : key => value
+    QMap<QString, QString> variables;
+
+    // path to selected theme dir - for simpler use, just use $theme-dir in qss : url($theme-dir/image.png)
+    QString themeDir = themesDir + "/" + theme;
+
+    // if theme selected
+    if (theme != "") {
+        QFile qss(themeDir + "/styles.qss");
+        // open qss
+        if (qss.open(QFile::ReadOnly))
+        {
+            // read stylesheet
+            QString styleSheet = QString(qss.readAll());
+            QTextStream in(&qss);
+            // rewind
+            in.seek(0);
+            bool readingVariables = false;
+
+            // seek for variables
+            while(!in.atEnd()) {
+                QString line = in.readLine();
+                // variables starts here
+                if (line == "/** [VARS]") {
+                    readingVariables = true;
+                }
+                // variables end here
+                if (line == "[/VARS] */") {
+                    break;
+                }
+                // if we're reading variables - store them in a map
+                if (readingVariables == true) {
+                    // skip empty lines
+                    if (line.length()>3 && line.contains('=')) {
+                        QStringList fields = line.split("=");
+                        QString var = fields.at(0).trimmed();
+                        QString value = fields.at(1).trimmed();
+                        variables[var] = value;
+                    }
+                }
+            }
+
+            // replace path to themes dir
+            styleSheet.replace("$theme-dir", themeDir);
+            styleSheet.replace("$themes-dir", themesDir);
+
+            QMapIterator<QString, QString> variable(variables);
+            variable.toBack();
+            // iterate backwards to prevent overwriting variables
+            while (variable.hasPrevious()) {
+                variable.previous();
+                // replace variables
+                styleSheet.replace(variable.key(), variable.value());
+            }
+
+            qss.close();
+
+            // Apply the result qss file to Qt
+
+            /*if (styleSheet.contains("$", Qt::CaseInsensitive)) {
+                QRegExp rx("(\\$[-\\w]+)");
+                rx.indexIn(styleSheet);
+                QString captured = rx.cap(1);
+                QMessageBox::warning(this, "Theme syntax error", "You have used variable that is not declared " + captured + ". Theme will not be applied.");
+            } else {*/
+                qApp->setStyleSheet(styleSheet);
+            /*}*/
+        }
+    } else {
+        // If not theme name given - clear styles
+        qApp->setStyleSheet(QString(""));
+    }
+
+    // set selected theme and store it in registry
+    selectedTheme = theme;
+    QSettings settings;
+    settings.setValue("Template", selectedTheme);
+}
+
+void BitcoinGUI::listThemes(QStringList& themes)
+{
+    QDir currentDir(qApp->applicationDirPath());
+    // try app dir
+    if (currentDir.cd("themes")) {
+    // got it! (win package)
+    } else if (currentDir.cd("src/qt/res/themes")) {
+        // got it
+    } else if (currentDir.cd("../src/qt/res/themes")) {
+        // got it
+    } else if (currentDir.cd("../../../themes")) {
+        // got it
+    } else {
+        // themes not found :(
+        return;
+    }
+    themesDir = currentDir.path();
+    currentDir.setFilter(QDir::Dirs);
+    QStringList entries = currentDir.entryList();
+    for( QStringList::ConstIterator entry=entries.begin(); entry!=entries.end(); ++entry )
+    {
+        QString themeName=*entry;
+        if(themeName != tr(".") && themeName != tr(".."))
+        {
+            themes.append(themeName);
+        }
+    }
+
+    // get selected theme from registry (if any)
+    QSettings settings;
+    selectedTheme = settings.value("Template").toString();
+    // or use default theme - Blackwood
+    if (selectedTheme=="") {
+        selectedTheme = "Default";
+    }
+    // load it!
+    loadTheme(selectedTheme);
+}
+
+void BitcoinGUI::keyPressEvent(QKeyEvent * e)
+{
+    switch (e->type())
+     {
+       case QEvent::KeyPress:
+         // $ key
+         if (e->key() == 36) {
+             // dev feature: key reloads selected theme
+             loadTheme(selectedTheme);
+         }
+         break;
+       default:
+         break;
+     }
+
+}
+
+/* /zeewolf: Hot swappable wallet themes */

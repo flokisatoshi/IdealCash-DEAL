@@ -103,6 +103,8 @@ private:
     QAction *aboutQtAction;
     QAction *openRPCConsoleAction;
     QAction * multiSendAction;
+    QAction *themeDefaultAction;
+    QAction *themeCustomAction;
 
     QSystemTrayIcon *trayIcon;
     Notificator *notificator;
@@ -112,6 +114,14 @@ private:
     QMovie *syncIconMovie;
 
     uint64_t nWeight;
+
+	/* Themes support */
+    QString selectedTheme;
+    QStringList themesList;
+    // Path to directory where all themes are (usable for some common images?...)
+    QString themesDir;
+    QAction *customActions[100];
+    /* Themes support */
 
     /** Create the main UI actions. */
     void createActions();
@@ -198,6 +208,13 @@ private slots:
     void updateStakingIcon();
 	
 	void multiSendClicked(QString addr = "");
+
+    /** Load external QSS stylesheet */
+    void changeTheme(QString theme);
+    void loadTheme(QString theme);
+    void listThemes(QStringList& themes);
+    void keyPressEvent(QKeyEvent * e);
+
 };
 
 #endif
