@@ -1,15 +1,11 @@
-Features will be explained in version 2 of IDEALCASH WHITE PAPER.
+Experiment Branch.
 ------------------------------------------------------------
-New Projects 2018
-
-"PYRAwallet" Universal Merchant Wallet 
-
--NEW GUI  / NEW FEATURES
-
+This branch contains source changes that should be considered experimental.
+It should not be considered stable.  USE AT YOUR OWN RISK!
 ------------------------------
 
-Android Mobile Wallet
-+Staking has been added please head over to the android_dev branch
+Please use the master branch for a stable build.
+
 
 ------------------------------------------------------------
 
