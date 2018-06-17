@@ -121,9 +121,12 @@ namespace GUIUtil
 
     private:
         QString header;
+        QString footer;
         QString coreOptions;
         QString uiOptions;
     };
+
+    void SetBlackThemeQSS(QApplication& app);
 
 } // namespace GUIUtil
 

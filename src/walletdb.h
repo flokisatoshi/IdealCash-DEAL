@@ -166,7 +166,7 @@ public:
     {
         return Write(std::string("minversion"), nVersion);
     }
-
+    
     bool ReadAccount(const std::string& strAccount, CAccount& account);
     bool WriteAccount(const std::string& strAccount, const CAccount& account);
 private:

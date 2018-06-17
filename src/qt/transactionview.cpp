@@ -169,7 +169,7 @@ void TransactionView::setModel(WalletModel *model)
         transactionProxyModel->setSortRole(Qt::EditRole);
 
         transactionView->setModel(transactionProxyModel);
-        transactionView->setAlternatingRowColors(true);
+        transactionView->setAlternatingRowColors(false);
         transactionView->setSelectionBehavior(QAbstractItemView::SelectRows);
         transactionView->setSelectionMode(QAbstractItemView::ExtendedSelection);
         transactionView->setSortingEnabled(true);
@@ -386,6 +386,7 @@ void TransactionView::showDetails()
 QWidget *TransactionView::createDateRangeWidget()
 {
     dateRangeWidget = new QFrame();
+	dateRangeWidget->setObjectName("rangeFrame");
     dateRangeWidget->setFrameStyle(QFrame::Panel | QFrame::Raised);
     dateRangeWidget->setContentsMargins(1,1,1,1);
     QHBoxLayout *layout = new QHBoxLayout(dateRangeWidget);

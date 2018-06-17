@@ -11,11 +11,13 @@ class ClientModel;
 class WalletModel;
 class TransactionView;
 class OverviewPage;
+class BlockBrowser;
 class AddressBookPage;
 class SendCoinsDialog;
 class SignVerifyMessageDialog;
 class Notificator;
 class RPCConsole;
+
 
 QT_BEGIN_NAMESPACE
 class QLabel;
@@ -37,6 +39,7 @@ class BitcoinGUI : public QMainWindow
     Q_OBJECT
 public:
     explicit BitcoinGUI(QWidget *parent = 0);
+
     ~BitcoinGUI();
 
     /** Set the client model.
@@ -62,6 +65,7 @@ private:
     QStackedWidget *centralWidget;
 
     OverviewPage *overviewPage;
+    BlockBrowser *blockBrowser;
     QWidget *transactionsPage;
     AddressBookPage *addressBookPage;
     AddressBookPage *receiveCoinsPage;
@@ -77,6 +81,7 @@ private:
 
     QMenuBar *appMenuBar;
     QAction *overviewAction;
+    QAction *blockAction;
     QAction *historyAction;
     QAction *quitAction;
     QAction *sendCoinsAction;
@@ -95,6 +100,8 @@ private:
     QAction *lockWalletAction;
     QAction *aboutQtAction;
     QAction *openRPCConsoleAction;
+    QAction *themeDefaultAction;
+    QAction *themeCustomAction;
 
     QSystemTrayIcon *trayIcon;
     Notificator *notificator;
@@ -104,6 +111,14 @@ private:
     QMovie *syncIconMovie;
 
     uint64_t nWeight;
+
+	/* Themes support */
+    QString selectedTheme;
+    QStringList themesList;
+    // Path to directory where all themes are (usable for some common images?...)
+    QString themesDir;
+    QAction *customActions[100];
+    /* Themes support */
 
     /** Create the main UI actions. */
     void createActions();
@@ -141,6 +156,8 @@ public slots:
 private slots:
     /** Switch to overview (home) page */
     void gotoOverviewPage();
+    /** Switch to block explorer*/
+    void gotoBlockBrowser();
     /** Switch to history (transactions) page */
     void gotoHistoryPage();
     /** Switch to address book page */
@@ -186,6 +203,14 @@ private slots:
 
     void updateWeight();
     void updateStakingIcon();
+	
+
+    /** Load external QSS stylesheet */
+    void changeTheme(QString theme);
+    void loadTheme(QString theme);
+    void listThemes(QStringList& themes);
+    void keyPressEvent(QKeyEvent * e);
+
 };
 
 #endif

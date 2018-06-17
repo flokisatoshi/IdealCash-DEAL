@@ -54,10 +54,12 @@ AddressBookPage::AddressBookPage(Mode mode, Tabs tab, QWidget *parent) :
         ui->labelExplanation->setVisible(false);
         ui->deleteButton->setVisible(true);
         ui->signMessage->setVisible(false);
-        break;
+ 
+       break;
     case ReceivingTab:
         ui->deleteButton->setVisible(false);
         ui->signMessage->setVisible(true);
+
         break;
     }
 
@@ -68,6 +70,7 @@ AddressBookPage::AddressBookPage(Mode mode, Tabs tab, QWidget *parent) :
     QAction *showQRCodeAction = new QAction(ui->showQRCode->text(), this);
     QAction *signMessageAction = new QAction(ui->signMessage->text(), this);
     QAction *verifyMessageAction = new QAction(ui->verifyMessage->text(), this);
+
     deleteAction = new QAction(ui->deleteButton->text(), this);
 
     // Build context menu
@@ -81,9 +84,9 @@ AddressBookPage::AddressBookPage(Mode mode, Tabs tab, QWidget *parent) :
     contextMenu->addAction(showQRCodeAction);
     if(tab == ReceivingTab)
         contextMenu->addAction(signMessageAction);
-    else if(tab == SendingTab)
+    else if(tab == SendingTab) 
         contextMenu->addAction(verifyMessageAction);
-
+   
     // Connect signals for context menu actions
     connect(copyAddressAction, SIGNAL(triggered()), this, SLOT(on_copyToClipboard_clicked()));
     connect(copyLabelAction, SIGNAL(triggered()), this, SLOT(onCopyLabelAction()));
@@ -209,6 +212,7 @@ void AddressBookPage::on_verifyMessage_clicked()
 
     emit verifyMessage(addr);
 }
+
 
 void AddressBookPage::on_newAddressButton_clicked()
 {
