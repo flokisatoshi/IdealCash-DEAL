@@ -1,6 +1,6 @@
 IdealCash (DEAL) 2018
 ----------------------------------------------------------
-Building idealcash
+Building idealcash (DEAL)
 
 See doc/readme-qt.rst for instructions on building idealcash QT,
 the intended-for-end-users, nice-graphical-interface, reference
