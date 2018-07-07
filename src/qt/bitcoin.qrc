@@ -50,7 +50,6 @@
         <file alias="splash">res/images/splash3.png</file>
         <file alias="header">res/images/header1.png</file>
         <file alias="footer">res/images/footer.png</file>
-        <file alias="backg">res/images/backg3.jpg</file>
     </qresource>
     <qresource prefix="/movies">
         <file alias="update_spinner">res/movies/update_spinner.gif</file>

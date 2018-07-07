@@ -16,10 +16,14 @@
 #endif
 
 #ifdef USE_UPNP
-#include </usr/local/include/miniupnpc/miniwget.h>
-#include </usr/local/include/miniupnpc/miniupnpc.h>
-#include </usr/local/include/miniupnpc/upnpcommands.h>
-#include </usr/local/include/miniupnpc/upnperrors.h>
+//#include </usr/local/include/miniupnpc/miniwget.h>
+//#include </usr/local/include/miniupnpc/miniupnpc.h>
+//#include </usr/local/include/miniupnpc/upnpcommands.h>
+//#include </usr/local/include/miniupnpc/upnperrors.h>
+#include <miniupnpc/miniwget.h>
+#include <miniupnpc/miniupnpc.h>
+#include <miniupnpc/upnpcommands.h>
+#include <miniupnpc/upnperrors.h>
 #endif
 
 using namespace std;
