@@ -7,6 +7,7 @@ class CCoinControl
 public:
     CTxDestination destChange;
 
+	
     CCoinControl()
     {
         SetNull();

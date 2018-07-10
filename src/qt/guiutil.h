@@ -121,10 +121,12 @@ namespace GUIUtil
 
     private:
         QString header;
+        QString footer;
         QString coreOptions;
         QString uiOptions;
     };
 
+   
 } // namespace GUIUtil
 
 #endif // GUIUTIL_H

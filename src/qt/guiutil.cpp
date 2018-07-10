@@ -500,5 +500,6 @@ void HelpMessageBox::showOrPrint()
 #endif
 }
 
+
 } // namespace GUIUtil
 

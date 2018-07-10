@@ -357,7 +357,7 @@
     </layout>
    </item>
    <item>
-    <widget class="QFrame" name="frame">
+    <widget class="QFrame" name="frame_3">
      <property name="minimumSize">
       <size>
        <width>0</width>
