@@ -110,7 +110,7 @@ public:
 CBlock* CreateNewBlock(CWallet* pwallet, bool fProofOfStake, int64_t* pFees)
 {
     // Create new block
-    unique_ptr<CBlock> pblock(new CBlock());
+    auto_ptr<CBlock> pblock(new CBlock());
     if (!pblock.get())
         return NULL;
 
