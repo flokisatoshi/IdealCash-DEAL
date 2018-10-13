@@ -96,7 +96,7 @@ public:
     {
         // Init OpenSSL library multithreading support
         ppmutexOpenSSL = (CCriticalSection**)OPENSSL_malloc(CRYPTO_num_locks() * sizeof(CCriticalSection*));
-        for (int i = 0; i < CRYPTO_num_locks(); i++)
+        for (int i = 0; i < CRYPTO_num_locks(); ++i)
             ppmutexOpenSSL[i] = new CCriticalSection();
         CRYPTO_set_locking_callback(locking_callback);
 
@@ -112,7 +112,7 @@ public:
     {
         // Shutdown OpenSSL library multithreading support
         CRYPTO_set_locking_callback(NULL);
-        for (int i = 0; i < CRYPTO_num_locks(); i++)
+        for (int i = 0; i < CRYPTO_num_locks(); ++i)
             delete ppmutexOpenSSL[i];
         OPENSSL_free(ppmutexOpenSSL);
     }
@@ -394,12 +394,12 @@ bool ParseMoney(const char* pszIn, int64_t& nRet)
     int64_t nUnits = 0;
     const char* p = pszIn;
     while (isspace(*p))
-        p++;
-    for (; *p; p++)
+        ++p;
+    for (; *p; ++p)
     {
         if (*p == '.')
         {
-            p++;
+            ++p;
             int64_t nMult = CENT*10;
             while (isdigit(*p) && (nMult > 0))
             {
@@ -414,7 +414,7 @@ bool ParseMoney(const char* pszIn, int64_t& nRet)
             return false;
         strWhole.insert(strWhole.end(), *p);
     }
-    for (; *p; p++)
+    for (; *p; ++p)
         if (!isspace(*p))
             return false;
     if (strWhole.size() > 10) // guard against 63 bit overflow
@@ -464,7 +464,7 @@ vector<unsigned char> ParseHex(const char* psz)
     while (true)
     {
         while (isspace(*psz))
-            psz++;
+            ++psz;
         signed char c = phexdigit[(unsigned char)*psz++];
         if (c == (signed char)-1)
             break;
@@ -502,7 +502,7 @@ void ParseParameters(int argc, const char* const argv[])
 {
     mapArgs.clear();
     mapMultiArgs.clear();
-    for (int i = 1; i < argc; i++)
+    for (int i = 1; i < argc; ++i)
     {
         char psz[10000];
         strlcpy(psz, argv[i], sizeof(psz));
@@ -668,7 +668,7 @@ vector<unsigned char> DecodeBase64(const char* p, bool* pfInvalid)
     {
          int dec = decode64_table[(unsigned char)*p];
          if (dec == -1) break;
-         p++;
+         ++p;
          switch (mode)
          {
              case 0: // we have no bits and get 6
@@ -777,7 +777,7 @@ string EncodeBase32(const unsigned char* pch, size_t len)
     if (mode)
     {
         strRet += pbase32[left];
-        for (int n=0; n<nPadding[mode]; n++)
+        for (int n=0; n<nPadding[mode]; ++n)
              strRet += '=';
     }
 
@@ -821,7 +821,7 @@ vector<unsigned char> DecodeBase32(const char* p, bool* pfInvalid)
     {
          int dec = decode32_table[(unsigned char)*p];
          if (dec == -1) break;
-         p++;
+         ++p;
          switch (mode)
          {
              case 0: // we have no bits and get 5
@@ -932,8 +932,8 @@ bool WildcardMatch(const char* psz, const char* mask)
                 return false;
             break;
         }
-        psz++;
-        mask++;
+        ++psz;
+        ++mask;
     }
 }
 
@@ -1050,7 +1050,7 @@ string randomStrGen(int length) {
     static string charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
     string result;
     result.resize(length);
-    for (int32_t i = 0; i < length; i++)
+    for (int32_t i = 0; i < length; ++i)
         result[i] = charset[rand() % charset.length()];
 
     return result;

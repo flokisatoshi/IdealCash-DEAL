@@ -178,23 +178,23 @@ int CompareBigEndian(const unsigned char *c1, size_t c1len, const unsigned char 
     while (c1len > c2len) {
         if (*c1)
             return 1;
-        c1++;
-        c1len--;
+        ++c1;
+        --c1len;
     }
     while (c2len > c1len) {
         if (*c2)
             return -1;
-        c2++;
-        c2len--;
+        ++c2;
+        --c2len;
     }
     while (c1len > 0) {
         if (*c1 > *c2)
             return 1;
         if (*c2 > *c1)
             return -1;
-        c1++;
-        c2++;
-        c1len--;
+        ++c1;
+        ++c2;
+        --c1len;
     }
     return 0;
 }
@@ -376,7 +376,7 @@ bool CKey::SignCompact(uint256 hash, std::vector<unsigned char>& vchSig)
     if (nBitsR <= 256 && nBitsS <= 256)
     {
         int nRecId = -1;
-        for (int i=0; i<4; i++)
+        for (int i=0; i<4; ++i)
         {
             CKey keyRec;
             keyRec.fSet = true;

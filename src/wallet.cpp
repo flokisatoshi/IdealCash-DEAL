@@ -792,7 +792,7 @@ void CWalletTx::AddSupportingTransactions(CTxDB& txdb)
             LOCK(pwallet->cs_wallet);
             map<uint256, const CMerkleTx*> mapWalletPrev;
             set<uint256> setAlreadyDone;
-            for (unsigned int i = 0; i < vWorkQueue.size(); i++)
+            for (unsigned int i = 0; i < vWorkQueue.size(); ++i)
             {
                 uint256 hash = vWorkQueue[i];
                 if (setAlreadyDone.count(hash))
@@ -865,7 +865,7 @@ int CWallet::ScanForWalletTransactions(CBlockIndex* pindexStart, bool fUpdate)
             BOOST_FOREACH(CTransaction& tx, block.vtx)
             {
                 if (AddToWalletIfInvolvingMe(tx, &block, fUpdate))
-                    ret++;
+                    ++ret;
             }
             pindex = pindex->pnext;
         }
@@ -898,7 +898,7 @@ void CWallet::ReacceptWalletTransactions()
                     printf("ERROR: ReacceptWalletTransactions() : txindex.vSpent.size() %" PRIszu " != wtx.vout.size() %" PRIszu "\n", txindex.vSpent.size(), wtx.vout.size());
                     continue;
                 }
-                for (unsigned int i = 0; i < txindex.vSpent.size(); i++)
+                for (unsigned int i = 0; i < txindex.vSpent.size(); ++i)
                 {
                     if (wtx.IsSpent(i))
                         continue;
@@ -1091,7 +1091,7 @@ void CWallet::AvailableCoins(vector<COutput>& vCoins, bool fOnlyConfirmed, const
             if (nDepth < 0)
                 continue;
 
-            for (unsigned int i = 0; i < pcoin->vout.size(); i++)
+            for (unsigned int i = 0; i < pcoin->vout.size(); ++i)
                 if (!(pcoin->IsSpent(i)) && IsMine(pcoin->vout[i]) && pcoin->vout[i].nValue >= nMinimumInputValue &&
                 (!coinControl || !coinControl->HasSelected() || coinControl->IsSelected((*it).first, i)))
                     vCoins.push_back(COutput(pcoin, i, nDepth));
@@ -1121,7 +1121,7 @@ void CWallet::AvailableCoinsForStaking(vector<COutput>& vCoins, unsigned int nSp
             if (nDepth < 1)
                 continue;
 
-            for (unsigned int i = 0; i < pcoin->vout.size(); i++)
+            for (unsigned int i = 0; i < pcoin->vout.size(); ++i)
                 if (!(pcoin->IsSpent(i)) && IsMine(pcoin->vout[i]) && pcoin->vout[i].nValue >= nMinimumInputValue)
                     vCoins.push_back(COutput(pcoin, i, nDepth));
         }
@@ -1138,14 +1138,14 @@ static void ApproximateBestSubset(vector<pair<int64_t, pair<const CWalletTx*,uns
 
     seed_insecure_rand();
 
-    for (int nRep = 0; nRep < iterations && nBest != nTargetValue; nRep++)
+    for (int nRep = 0; nRep < iterations && nBest != nTargetValue; ++nRep)
     {
         vfIncluded.assign(vValue.size(), false);
         int64_t nTotal = 0;
         bool fReachedTarget = false;
-        for (int nPass = 0; nPass < 2 && !fReachedTarget; nPass++)
+        for (int nPass = 0; nPass < 2 && !fReachedTarget; ++nPass)
         {
-            for (unsigned int i = 0; i < vValue.size(); i++)
+            for (unsigned int i = 0; i < vValue.size(); ++i)
             {
                 //The solver here uses a randomized algorithm,
                 //the randomness serves no real security purpose but is just
@@ -1286,7 +1286,7 @@ bool CWallet::SelectCoinsMinConf(int64_t nTargetValue, unsigned int nSpendTime, 
         nValueRet += coinLowestLarger.first;
     }
     else {
-        for (unsigned int i = 0; i < vValue.size(); i++)
+        for (unsigned int i = 0; i < vValue.size(); ++i)
             if (vfBest[i])
             {
                 setCoinsRet.insert(vValue[i].second);
@@ -1297,7 +1297,7 @@ bool CWallet::SelectCoinsMinConf(int64_t nTargetValue, unsigned int nSpendTime, 
         {
             //// debug print
             printf("SelectCoins() best subset: ");
-            for (unsigned int i = 0; i < vValue.size(); i++)
+            for (unsigned int i = 0; i < vValue.size(); ++i)
                 if (vfBest[i])
                     printf("%s ", FormatMoney(vValue[i].first).c_str());
             printf("total %s\n", FormatMoney(nBest).c_str());
@@ -2006,7 +2006,7 @@ bool CWallet::NewKeyPool()
             return false;
 
         int64_t nKeys = max(GetArg("-keypool", 100), (int64_t)0);
-        for (int i = 0; i < nKeys; i++)
+        for (int i = 0; i < nKeys; ++i)
         {
             int64_t nIndex = i+1;
             walletdb.WritePool(nIndex, CKeyPool(GenerateNewKey()));
@@ -2169,7 +2169,7 @@ std::map<CTxDestination, int64_t> CWallet::GetAddressBalances()
             if (nDepth < (pcoin->IsFromMe() ? 0 : 1))
                 continue;
 
-            for (unsigned int i = 0; i < pcoin->vout.size(); i++)
+            for (unsigned int i = 0; i < pcoin->vout.size(); ++i)
             {
                 CTxDestination addr;
                 if (!IsMine(pcoin->vout[i]))
@@ -2225,7 +2225,7 @@ set< set<CTxDestination> > CWallet::GetAddressGroupings()
         }
 
         // group lone addrs by themselves
-        for (unsigned int i = 0; i < pcoin->vout.size(); i++)
+        for (unsigned int i = 0; i < pcoin->vout.size(); ++i)
             if (IsMine(pcoin->vout[i]))
             {
                 CTxDestination address;
@@ -2293,13 +2293,13 @@ void CWallet::FixSpentCoins(int& nMismatchFound, int64_t& nBalanceInQuestion, bo
         CTxIndex txindex;
         if (!txdb.ReadTxIndex(pcoin->GetHash(), txindex))
             continue;
-        for (unsigned int n=0; n < pcoin->vout.size(); n++)
+        for (unsigned int n=0; n < pcoin->vout.size(); ++n)
         {
             if (IsMine(pcoin->vout[n]) && pcoin->IsSpent(n) && (txindex.vSpent.size() <= n || txindex.vSpent[n].IsNull()))
             {
                 printf("FixSpentCoins found lost coin %s BC %s[%d], %s\n",
                     FormatMoney(pcoin->vout[n].nValue).c_str(), pcoin->GetHash().ToString().c_str(), n, fCheckOnly? "repair not attempted" : "repairing");
-                nMismatchFound++;
+                ++nMismatchFound;
                 nBalanceInQuestion += pcoin->vout[n].nValue;
                 if (!fCheckOnly)
                 {
@@ -2311,7 +2311,7 @@ void CWallet::FixSpentCoins(int& nMismatchFound, int64_t& nBalanceInQuestion, bo
             {
                 printf("FixSpentCoins found spent coin %s BC %s[%d], %s\n",
                     FormatMoney(pcoin->vout[n].nValue).c_str(), pcoin->GetHash().ToString().c_str(), n, fCheckOnly? "repair not attempted" : "repairing");
-                nMismatchFound++;
+                ++nMismatchFound;
                 nBalanceInQuestion += pcoin->vout[n].nValue;
                 if (!fCheckOnly)
                 {
@@ -2418,7 +2418,7 @@ void CWallet::GetKeyBirthTimes(std::map<CKeyID, int64_t> &mapKeyBirth) const {
     mapKeyBirth.clear();
 
     // get birth times for keys with metadata
-    for (std::map<CKeyID, CKeyMetadata>::const_iterator it = mapKeyMetadata.begin(); it != mapKeyMetadata.end(); it++)
+    for (std::map<CKeyID, CKeyMetadata>::const_iterator it = mapKeyMetadata.begin(); it != mapKeyMetadata.end(); ++it)
         if (it->second.nCreateTime)
             mapKeyBirth[it->first] = it->second.nCreateTime;
 
@@ -2439,7 +2439,7 @@ void CWallet::GetKeyBirthTimes(std::map<CKeyID, int64_t> &mapKeyBirth) const {
 
     // find first block that affects those keys, if there are any left
     std::vector<CKeyID> vAffected;
-    for (std::map<uint256, CWalletTx>::const_iterator it = mapWallet.begin(); it != mapWallet.end(); it++) {
+    for (std::map<uint256, CWalletTx>::const_iterator it = mapWallet.begin(); it != mapWallet.end(); ++it) {
         // iterate over all wallet transactions...
         const CWalletTx &wtx = (*it).second;
         std::map<uint256, CBlockIndex*>::const_iterator blit = mapBlockIndex.find(wtx.hashBlock);
@@ -2461,7 +2461,7 @@ void CWallet::GetKeyBirthTimes(std::map<CKeyID, int64_t> &mapKeyBirth) const {
     }
 
     // Extract block timestamps for those keys
-    for (std::map<CKeyID, CBlockIndex*>::const_iterator it = mapKeyFirstBlock.begin(); it != mapKeyFirstBlock.end(); it++)
+    for (std::map<CKeyID, CBlockIndex*>::const_iterator it = mapKeyFirstBlock.begin(); it != mapKeyFirstBlock.end(); ++it)
         mapKeyBirth[it->first] = it->second->nTime - 7200; // block times can be 2h off
 }
 

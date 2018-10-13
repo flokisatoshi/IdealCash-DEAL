@@ -201,7 +201,7 @@ Value getworkex(const Array& params, bool fHelp)
         CBlock* pdata = (CBlock*)&vchData[0];
 
         // Byte reverse
-        for (int i = 0; i < 128/4; i++)
+        for (int i = 0; i < 128/4; ++i)
             ((unsigned int*)pdata)[i] = ByteReverse(((unsigned int*)pdata)[i]);
 
         // Get saved block
@@ -322,7 +322,7 @@ Value getwork(const Array& params, bool fHelp)
         CBlock* pdata = (CBlock*)&vchData[0];
 
         // Byte reverse
-        for (int i = 0; i < 128/4; i++)
+        for (int i = 0; i < 128/4; ++i)
             ((unsigned int*)pdata)[i] = ByteReverse(((unsigned int*)pdata)[i]);
 
         // Get saved block
@@ -432,7 +432,7 @@ Value getblocktemplate(const Array& params, bool fHelp)
     BOOST_FOREACH (CTransaction& tx, pblock->vtx)
     {
         uint256 txHash = tx.GetHash();
-        setTxIndex[txHash] = i++;
+        setTxIndex[txHash] = ++i;
 
         if (tx.IsCoinBase() || tx.IsCoinStake())
             continue;

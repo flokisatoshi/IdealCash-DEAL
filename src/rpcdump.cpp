@@ -75,7 +75,7 @@ std::string static EncodeDumpString(const std::string &str) {
 
 std::string DecodeDumpString(const std::string &str) {
     std::stringstream ret;
-    for (unsigned int pos = 0; pos < str.length(); pos++) {
+    for (unsigned int pos = 0; pos < str.length(); ++pos) {
         unsigned char c = str[pos];
         if (c == '%' && pos+2 < str.length()) {
             c = (((str[pos+1]>>6)*9+((str[pos+1]-'0')&15)) << 4) | 
@@ -198,7 +198,7 @@ Value importwallet(const Array& params, bool fHelp)
         int64_t nTime = DecodeDumpTime(vstr[1]);
         std::string strLabel;
         bool fLabel = true;
-        for (unsigned int nStr = 2; nStr < vstr.size(); nStr++) {
+        for (unsigned int nStr = 2; nStr < vstr.size(); ++nStr) {
             if (boost::algorithm::starts_with(vstr[nStr], "#"))
                 break;
             if (vstr[nStr] == "change=1")
@@ -290,7 +290,7 @@ Value dumpwallet(const Array& params, bool fHelp)
 
     // sort time/key pairs
     std::vector<std::pair<int64_t, CKeyID> > vKeyBirth;
-    for (std::map<CKeyID, int64_t>::const_iterator it = mapKeyBirth.begin(); it != mapKeyBirth.end(); it++) {
+    for (std::map<CKeyID, int64_t>::const_iterator it = mapKeyBirth.begin(); it != mapKeyBirth.end(); ++it) {
         vKeyBirth.push_back(std::make_pair(it->second, it->first));
     }
     mapKeyBirth.clear();
@@ -302,7 +302,7 @@ Value dumpwallet(const Array& params, bool fHelp)
     file << strprintf("# * Best block at time of backup was %i (%s),\n", nBestHeight, hashBestChain.ToString().c_str());
     file << strprintf("#   mined on %s\n", EncodeDumpTime(pindexBest->nTime).c_str());
     file << "\n";
-    for (std::vector<std::pair<int64_t, CKeyID> >::const_iterator it = vKeyBirth.begin(); it != vKeyBirth.end(); it++) {
+    for (std::vector<std::pair<int64_t, CKeyID> >::const_iterator it = vKeyBirth.begin(); it != vKeyBirth.end(); ++it) {
         const CKeyID &keyid = it->second;
         std::string strTime = EncodeDumpTime(it->first);
         std::string strAddr = CBitcoinAddress(keyid).ToString();

@@ -465,7 +465,7 @@ void Unserialize_impl(Stream& is, std::vector<T, A>& v, int nType, int nVersion,
         if (nMid > nSize)
             nMid = nSize;
         v.resize(nMid);
-        for (; i < nMid; i++)
+        for (; i < nMid; ++i)
             Unserialize(is, v[i], nType, nVersion);
     }
 }
@@ -616,7 +616,7 @@ void Unserialize(Stream& is, std::map<K, T, Pred, A>& m, int nType, int nVersion
     m.clear();
     unsigned int nSize = ReadCompactSize(is);
     typename std::map<K, T, Pred, A>::iterator mi = m.begin();
-    for (unsigned int i = 0; i < nSize; i++)
+    for (unsigned int i = 0; i < nSize; ++i)
     {
         std::pair<K, T> item;
         Unserialize(is, item, nType, nVersion);
@@ -652,7 +652,7 @@ void Unserialize(Stream& is, std::set<K, Pred, A>& m, int nType, int nVersion)
     m.clear();
     unsigned int nSize = ReadCompactSize(is);
     typename std::set<K, Pred, A>::iterator it = m.begin();
-    for (unsigned int i = 0; i < nSize; i++)
+    for (unsigned int i = 0; i < nSize; ++i)
     {
         K key;
         Unserialize(is, key, nType, nVersion);

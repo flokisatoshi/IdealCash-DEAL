@@ -72,19 +72,19 @@ public:
 
     bool WriteTx(uint256 hash, const CWalletTx& wtx)
     {
-        nWalletDBUpdated++;
+        ++nWalletDBUpdated;
         return Write(std::make_pair(std::string("tx"), hash), wtx);
     }
 
     bool EraseTx(uint256 hash)
     {
-        nWalletDBUpdated++;
+        ++nWalletDBUpdated;
         return Erase(std::make_pair(std::string("tx"), hash));
     }
 
     bool WriteKey(const CPubKey& vchPubKey, const CPrivKey& vchPrivKey, const CKeyMetadata &keyMeta)
     {
-        nWalletDBUpdated++;
+        ++nWalletDBUpdated;
 
         if(!Write(std::make_pair(std::string("keymeta"), vchPubKey), keyMeta))
             return false;
@@ -94,7 +94,7 @@ public:
 
     bool WriteCryptedKey(const CPubKey& vchPubKey, const std::vector<unsigned char>& vchCryptedSecret, const CKeyMetadata &keyMeta)
     {
-        nWalletDBUpdated++;
+        ++nWalletDBUpdated;
         bool fEraseUnencryptedKey = true;
 
         if(!Write(std::make_pair(std::string("keymeta"), vchPubKey), keyMeta))
@@ -112,19 +112,19 @@ public:
 
     bool WriteMasterKey(unsigned int nID, const CMasterKey& kMasterKey)
     {
-        nWalletDBUpdated++;
+        ++nWalletDBUpdated;
         return Write(std::make_pair(std::string("mkey"), nID), kMasterKey, true);
     }
 
     bool WriteCScript(const uint160& hash, const CScript& redeemScript)
     {
-        nWalletDBUpdated++;
+        ++nWalletDBUpdated;
         return Write(std::make_pair(std::string("cscript"), hash), redeemScript, false);
     }
 
     bool WriteBestBlock(const CBlockLocator& locator)
     {
-        nWalletDBUpdated++;
+        ++nWalletDBUpdated;
         return Write(std::string("bestblock"), locator);
     }
 
@@ -135,13 +135,13 @@ public:
 
     bool WriteOrderPosNext(int64_t nOrderPosNext)
     {
-        nWalletDBUpdated++;
+        ++nWalletDBUpdated;
         return Write(std::string("orderposnext"), nOrderPosNext);
     }
 
     bool WriteDefaultKey(const CPubKey& vchPubKey)
     {
-        nWalletDBUpdated++;
+        ++nWalletDBUpdated;
         return Write(std::string("defaultkey"), vchPubKey.Raw());
     }
 
@@ -152,13 +152,13 @@ public:
 
     bool WritePool(int64_t nPool, const CKeyPool& keypool)
     {
-        nWalletDBUpdated++;
+        ++nWalletDBUpdated;
         return Write(std::make_pair(std::string("pool"), nPool), keypool);
     }
 
     bool ErasePool(int64_t nPool)
     {
-        nWalletDBUpdated++;
+        ++nWalletDBUpdated;
         return Erase(std::make_pair(std::string("pool"), nPool));
     }
 

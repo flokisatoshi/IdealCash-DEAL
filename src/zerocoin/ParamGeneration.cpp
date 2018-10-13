@@ -94,7 +94,7 @@ CalculateParams(Params &params, Bignum N, string aux, uint32_t securityLevel)
 	// "C" and repeat.
 	Bignum constant(ACCUMULATOR_BASE_CONSTANT);
 	params.accumulatorParams.accumulatorBase = Bignum(1);
-	for (uint32_t count = 0; count < MAX_ACCUMGEN_ATTEMPTS && params.accumulatorParams.accumulatorBase.isOne(); count++) {
+	for (uint32_t count = 0; count < MAX_ACCUMGEN_ATTEMPTS && params.accumulatorParams.accumulatorBase.isOne(); ++count) {
 		params.accumulatorParams.accumulatorBase = constant.pow_mod(Bignum(2), params.accumulatorParams.accumulatorModulus);
 	}
 
@@ -295,7 +295,7 @@ deriveIntegerGroupFromOrder(Bignum &groupOrder)
 
 	// Try possible values for "modulus" of the form "groupOrder * 2 * i" where
 	// "p" is prime and i is a counter starting at 1.
-	for (uint32_t i = 1; i < NUM_SCHNORRGEN_ATTEMPTS; i++) {
+	for (uint32_t i = 1; i < NUM_SCHNORRGEN_ATTEMPTS; ++i) {
 		// Set modulus equal to "groupOrder * 2 * i"
 		result.modulus = (result.groupOrder * Bignum(i*2)) + Bignum(1);
 
@@ -396,7 +396,7 @@ calculateGroupModulusAndOrder(uint256 seed, uint32_t pLen, uint32_t qLen,
 
 	// Now loop until we find a valid prime "p" or we fail due to
 	// pgen_counter exceeding ((4*pLen) + old_counter).
-	for ( ; pgen_counter <= ((4*pLen) + old_counter) ; pgen_counter++) {
+	for ( ; pgen_counter <= ((4*pLen) + old_counter) ; ++pgen_counter) {
 		// If (2 * t * resultGroupOrder * p0 + 1) > 2^{pLen}, then
 		// t = ⎡2^{pLen−1} / (2 * resultGroupOrder * p0)⎤.
 		powerOfTwo = Bignum(2).pow(pLen);
@@ -465,7 +465,7 @@ calculateGroupGenerator(uint256 seed, uint256 pSeed, uint256 qSeed, Bignum modul
 	Bignum e = (modulus - Bignum(1)) / groupOrder;
 
 	// Loop until we find a generator
-	for (uint32_t count = 1; count < MAX_GENERATOR_ATTEMPTS; count++) {
+	for (uint32_t count = 1; count < MAX_GENERATOR_ATTEMPTS; ++count) {
 		// hash = Hash(seed || pSeed || qSeed || “ggen” || index || count
 		uint256 hash = calculateGeneratorSeed(seed, pSeed, qSeed, "ggen", index, count);
 		Bignum W(hash);
@@ -524,7 +524,7 @@ generateRandomPrime(uint32_t primeBitLen, uint256 in_seed, uint256 *out_seed,
 #endif
 
 			prime_seed += (iteration_count + 1);
-			(*prime_gen_counter)++;
+			++(*prime_gen_counter);
 
 			// Set "intc" to be the least odd integer >= "c" we just generated
 			uint32_t intc = c.getulong();
@@ -570,7 +570,7 @@ generateRandomPrime(uint32_t primeBitLen, uint256 in_seed, uint256 *out_seed,
 		Bignum t = x / (Bignum(2) * c0);
 
 		// Repeat the following procedure until we find a prime (or time out)
-		for (uint32_t testNum = 0; testNum < MAX_PRIMEGEN_ATTEMPTS; testNum++) {
+		for (uint32_t testNum = 0; testNum < MAX_PRIMEGEN_ATTEMPTS; ++testNum) {
 
 			// If ((2 * t * c0) + 1 > 2^{primeBitLen}),
 			// then t = ⎡2^{primeBitLen} – 1 / (2 * c0)⎤.
@@ -582,7 +582,7 @@ generateRandomPrime(uint32_t primeBitLen, uint256 in_seed, uint256 *out_seed,
 			Bignum c = (Bignum(2) * t * c0) + Bignum(1);
 
 			// Increment prime_gen_counter
-			(*prime_gen_counter)++;
+			++(*prime_gen_counter);
 
 			// Test "c" for primality as follows:
 			// 1. First pick an integer "a" in between 2 and (c - 2)
@@ -624,7 +624,7 @@ generateIntegerFromSeed(uint32_t numBits, uint256 seed, uint32_t *numIterations)
 #endif
 
 	// Loop "iterations" times filling up the value "result" with random bits
-	for (uint32_t count = 0; count < iterations; count++) {
+	for (uint32_t count = 0; count < iterations; ++count) {
 		// result += ( H(pseed + count) * 2^{count * p0len} )
 		result += Bignum(calculateHash(seed + count)) * Bignum(2).pow(count * HASH_OUTPUT_BITS);
 	}

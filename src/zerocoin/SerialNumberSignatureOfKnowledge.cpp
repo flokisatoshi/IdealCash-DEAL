@@ -42,7 +42,7 @@ SerialNumberSignatureOfKnowledge::SerialNumberSignatureOfKnowledge(const
 	vector<Bignum> c(params->zkp_iterations);
 
 
-	for(uint32_t i=0; i < params->zkp_iterations; i++) {
+	for(uint32_t i=0; i < params->zkp_iterations; ++i) {
 		//FIXME we really ought to use one BN_CTX for all of these
 		// operations for performance reasons, not the one that
 		// is created individually  by the wrapper
@@ -56,7 +56,7 @@ SerialNumberSignatureOfKnowledge::SerialNumberSignatureOfKnowledge(const
 #ifdef ZEROCOIN_THREADING
 	#pragma omp parallel for
 #endif
-	for(uint32_t i=0; i < params->zkp_iterations; i++) {
+	for(uint32_t i=0; i < params->zkp_iterations; ++i) {
 		// compute g^{ {a^x b^r} h^v} mod p2
 		c[i] = challengeCalculation(coin.getSerialNumber(), r[i], v[i]);
 	}
@@ -64,7 +64,7 @@ SerialNumberSignatureOfKnowledge::SerialNumberSignatureOfKnowledge(const
 	// We can't hash data in parallel either
 	// because OPENMP cannot not guarantee loops
 	// execute in order.
-	for(uint32_t i=0; i < params->zkp_iterations; i++) {
+	for(uint32_t i=0; i < params->zkp_iterations; ++i) {
 		hasher << c[i];
 	}
 	this->hash = hasher.GetHash();
@@ -73,7 +73,7 @@ SerialNumberSignatureOfKnowledge::SerialNumberSignatureOfKnowledge(const
 #ifdef ZEROCOIN_THREADING
 	#pragma omp parallel for
 #endif
-	for(uint32_t i = 0; i < params->zkp_iterations; i++) {
+	for(uint32_t i = 0; i < params->zkp_iterations; ++i) {
 		int bit = i % 8;
 		int byte = i / 8;
 
@@ -117,7 +117,7 @@ bool SerialNumberSignatureOfKnowledge::Verify(const Bignum& coinSerialNumber, co
 #ifdef ZEROCOIN_THREADING
 	#pragma omp parallel for
 #endif
-	for(uint32_t i = 0; i < params->zkp_iterations; i++) {
+	for(uint32_t i = 0; i < params->zkp_iterations; ++i) {
 		int bit = i % 8;
 		int byte = i / 8;
 		bool challenge_bit = ((hashbytes[byte] >> bit) & 0x01);
@@ -130,7 +130,7 @@ bool SerialNumberSignatureOfKnowledge::Verify(const Bignum& coinSerialNumber, co
 			            params->serialNumberSoKCommitmentGroup.modulus;
 		}
 	}
-	for(uint32_t i = 0; i < params->zkp_iterations; i++) {
+	for(uint32_t i = 0; i < params->zkp_iterations; ++i) {
 		hasher << tprime[i];
 	}
 	return hasher.GetHash() == hash;

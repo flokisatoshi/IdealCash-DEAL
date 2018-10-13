@@ -21,7 +21,7 @@ extern bool fWalletUnlockStakingOnly;
 
 bool CWalletDB::WriteName(const string& strAddress, const string& strName)
 {
-    nWalletDBUpdated++;
+    ++nWalletDBUpdated;
     return Write(make_pair(string("name"), strAddress), strName);
 }
 
@@ -29,7 +29,7 @@ bool CWalletDB::EraseName(const string& strAddress)
 {
     // This should only be used for sending addresses, never for receiving addresses,
     // receiving addresses must always have an address book entry if they're not change return.
-    nWalletDBUpdated++;
+    ++nWalletDBUpdated;
     return Erase(make_pair(string("name"), strAddress));
 }
 
@@ -284,7 +284,7 @@ ReadKeyValue(CWallet* pwallet, CDataStream& ssKey, CDataStream& ssValue,
             CKey key;
             if (strType == "key")
             {
-                wss.nKeys++;
+                ++wss.nKeys;
                 CPrivKey pkey;
                 ssValue >> pkey;
                 key.SetPubKey(vchPubKey);
@@ -348,7 +348,7 @@ ReadKeyValue(CWallet* pwallet, CDataStream& ssKey, CDataStream& ssValue,
         }
         else if (strType == "ckey")
         {
-            wss.nCKeys++;
+            ++wss.nCKeys;
             vector<unsigned char> vchPubKey;
             ssKey >> vchPubKey;
             vector<unsigned char> vchPrivKey;
@@ -366,7 +366,7 @@ ReadKeyValue(CWallet* pwallet, CDataStream& ssKey, CDataStream& ssValue,
             ssKey >> vchPubKey;
             CKeyMetadata keyMeta;
             ssValue >> keyMeta;
-            wss.nKeyMeta++;
+            ++wss.nKeyMeta;
 
             pwallet->LoadKeyMetadata(vchPubKey, keyMeta);
 
@@ -567,7 +567,7 @@ void ThreadFlushWalletDB(void* parg)
                 while (mi != bitdb.mapFileUseCount.end())
                 {
                     nRefCount += (*mi).second;
-                    mi++;
+                    ++mi;
                 }
 
                 if (nRefCount == 0 && !fShutdown)
@@ -583,7 +583,7 @@ void ThreadFlushWalletDB(void* parg)
                         bitdb.CloseDb(strFile);
                         bitdb.CheckpointLSN(strFile);
 
-                        bitdb.mapFileUseCount.erase(mi++);
+                        bitdb.mapFileUseCount.erase(mi+);
                         printf("Flushed wallet.dat %" PRId64 "ms\n", GetTimeMillis() - nStart);
                     }
                 }

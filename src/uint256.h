@@ -29,7 +29,7 @@ public:
 
     bool operator!() const
     {
-        for (int i = 0; i < WIDTH; i++)
+        for (int i = 0; i < WIDTH; ++i)
             if (pn[i] != 0)
                 return false;
         return true;
@@ -38,7 +38,7 @@ public:
     const base_uint operator~() const
     {
         base_uint ret;
-        for (int i = 0; i < WIDTH; i++)
+        for (int i = 0; i < WIDTH; ++i)
             ret.pn[i] = ~pn[i];
         return ret;
     }
@@ -46,17 +46,16 @@ public:
     const base_uint operator-() const
     {
         base_uint ret;
-        for (int i = 0; i < WIDTH; i++)
+        for (int i = 0; i < WIDTH; ++i)
             ret.pn[i] = ~pn[i];
-        ret++;
-        return ret;
+        return ++ret;
     }
 
     double getdouble() const
     {
         double ret = 0.0;
         double fact = 1.0;
-        for (int i = 0; i < WIDTH; i++) {
+        for (int i = 0; i < WIDTH; ++i) {
             ret += fact * pn[i];
             fact *= 4294967296.0;
         }
@@ -67,28 +66,28 @@ public:
     {
         pn[0] = (unsigned int)b;
         pn[1] = (unsigned int)(b >> 32);
-        for (int i = 2; i < WIDTH; i++)
+        for (int i = 2; i < WIDTH; ++i)
             pn[i] = 0;
         return *this;
     }
 
     base_uint& operator^=(const base_uint& b)
     {
-        for (int i = 0; i < WIDTH; i++)
+        for (int i = 0; i < WIDTH; ++i)
             pn[i] ^= b.pn[i];
         return *this;
     }
 
     base_uint& operator&=(const base_uint& b)
     {
-        for (int i = 0; i < WIDTH; i++)
+        for (int i = 0; i < WIDTH; ++i)
             pn[i] &= b.pn[i];
         return *this;
     }
 
     base_uint& operator|=(const base_uint& b)
     {
-        for (int i = 0; i < WIDTH; i++)
+        for (int i = 0; i < WIDTH; ++i)
             pn[i] |= b.pn[i];
         return *this;
     }
@@ -110,11 +109,11 @@ public:
     base_uint& operator<<=(unsigned int shift)
     {
         base_uint a(*this);
-        for (int i = 0; i < WIDTH; i++)
+        for (int i = 0; i < WIDTH; ++i)
             pn[i] = 0;
         int k = shift / 32;
         shift = shift % 32;
-        for (int i = 0; i < WIDTH; i++)
+        for (int i = 0; i < WIDTH; ++i)
         {
             if (i+k+1 < WIDTH && shift != 0)
                 pn[i+k+1] |= (a.pn[i] >> (32-shift));
@@ -127,11 +126,11 @@ public:
     base_uint& operator>>=(unsigned int shift)
     {
         base_uint a(*this);
-        for (int i = 0; i < WIDTH; i++)
+        for (int i = 0; i < WIDTH; ++i)
             pn[i] = 0;
         int k = shift / 32;
         shift = shift % 32;
-        for (int i = 0; i < WIDTH; i++)
+        for (int i = 0; i < WIDTH; ++i)
         {
             if (i-k-1 >= 0 && shift != 0)
                 pn[i-k-1] |= (a.pn[i] << (32-shift));
@@ -144,7 +143,7 @@ public:
     base_uint& operator+=(const base_uint& b)
     {
         uint64_t carry = 0;
-        for (int i = 0; i < WIDTH; i++)
+        for (int i = 0; i < WIDTH; ++i)
         {
             uint64_t n = carry + pn[i] + b.pn[i];
             pn[i] = n & 0xffffffff;
@@ -181,7 +180,7 @@ public:
         // prefix operator
         int i = 0;
         while (++pn[i] == 0 && i < WIDTH-1)
-            i++;
+            ++i;
         return *this;
     }
 
@@ -198,7 +197,7 @@ public:
         // prefix operator
         int i = 0;
         while (--pn[i] == -1 && i < WIDTH-1)
-            i++;
+            ++i;
         return *this;
     }
 
@@ -213,7 +212,7 @@ public:
 
     friend inline bool operator<(const base_uint& a, const base_uint& b)
     {
-        for (int i = base_uint::WIDTH-1; i >= 0; i--)
+        for (int i = base_uint::WIDTH-1; i >= 0; --i)
         {
             if (a.pn[i] < b.pn[i])
                 return true;
@@ -261,7 +260,7 @@ public:
 
     friend inline bool operator==(const base_uint& a, const base_uint& b)
     {
-        for (int i = 0; i < base_uint::WIDTH; i++)
+        for (int i = 0; i < base_uint::WIDTH; ++i)
             if (a.pn[i] != b.pn[i])
                 return false;
         return true;
@@ -273,7 +272,7 @@ public:
             return false;
         if (a.pn[1] != (unsigned int)(b >> 32))
             return false;
-        for (int i = 2; i < base_uint::WIDTH; i++)
+        for (int i = 2; i < base_uint::WIDTH; ++i)
             if (a.pn[i] != 0)
                 return false;
         return true;
@@ -294,19 +293,19 @@ public:
     std::string GetHex() const
     {
         char psz[sizeof(pn)*2 + 1];
-        for (unsigned int i = 0; i < sizeof(pn); i++)
+        for (unsigned int i = 0; i < sizeof(pn); ++i)
             sprintf(psz + i*2, "%02x", ((unsigned char*)pn)[sizeof(pn) - i - 1]);
         return std::string(psz, psz + sizeof(pn)*2);
     }
 
     void SetHex(const char* psz)
     {
-        for (int i = 0; i < WIDTH; i++)
+        for (int i = 0; i < WIDTH; ++i)
             pn[i] = 0;
 
         // skip leading spaces
         while (isspace(*psz))
-            psz++;
+            ++psz;
 
         // skip 0x
         if (psz[0] == '0' && tolower(psz[1]) == 'x')
@@ -316,7 +315,7 @@ public:
         static const unsigned char phexdigit[256] = { 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0, 0,1,2,3,4,5,6,7,8,9,0,0,0,0,0,0, 0,0xa,0xb,0xc,0xd,0xe,0xf,0,0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0, 0,0xa,0xb,0xc,0xd,0xe,0xf,0,0,0,0,0,0,0,0,0 };
         const char* pbegin = psz;
         while (phexdigit[(unsigned char)*psz] || *psz == '0')
-            psz++;
+            ++psz;
         psz--;
         unsigned char* p1 = (unsigned char*)pn;
         unsigned char* pend = p1 + WIDTH * 4;
@@ -326,7 +325,7 @@ public:
             if (psz >= pbegin)
             {
                 *p1 |= (phexdigit[(unsigned char)*psz--] << 4);
-                p1++;
+                ++p1;
             }
         }
     }
@@ -406,19 +405,19 @@ public:
 
     uint160()
     {
-        for (int i = 0; i < WIDTH; i++)
+        for (int i = 0; i < WIDTH; ++i)
             pn[i] = 0;
     }
 
     uint160(const basetype& b)
     {
-        for (int i = 0; i < WIDTH; i++)
+        for (int i = 0; i < WIDTH; ++i)
             pn[i] = b.pn[i];
     }
 
     uint160& operator=(const basetype& b)
     {
-        for (int i = 0; i < WIDTH; i++)
+        for (int i = 0; i < WIDTH; ++i)
             pn[i] = b.pn[i];
         return *this;
     }
@@ -427,7 +426,7 @@ public:
     {
         pn[0] = (unsigned int)b;
         pn[1] = (unsigned int)(b >> 32);
-        for (int i = 2; i < WIDTH; i++)
+        for (int i = 2; i < WIDTH; ++i)
             pn[i] = 0;
     }
 
@@ -435,7 +434,7 @@ public:
     {
         pn[0] = (unsigned int)b;
         pn[1] = (unsigned int)(b >> 32);
-        for (int i = 2; i < WIDTH; i++)
+        for (int i = 2; i < WIDTH; ++i)
             pn[i] = 0;
         return *this;
     }
@@ -521,19 +520,19 @@ public:
 
     uint256()
     {
-        for (int i = 0; i < WIDTH; i++)
+        for (int i = 0; i < WIDTH; ++i)
             pn[i] = 0;
     }
 
     uint256(const basetype& b)
     {
-        for (int i = 0; i < WIDTH; i++)
+        for (int i = 0; i < WIDTH; ++i)
             pn[i] = b.pn[i];
     }
 
     uint256& operator=(const basetype& b)
     {
-        for (int i = 0; i < WIDTH; i++)
+        for (int i = 0; i < WIDTH; ++i)
             pn[i] = b.pn[i];
         return *this;
     }
@@ -542,7 +541,7 @@ public:
     {
         pn[0] = (unsigned int)b;
         pn[1] = (unsigned int)(b >> 32);
-        for (int i = 2; i < WIDTH; i++)
+        for (int i = 2; i < WIDTH; ++i)
             pn[i] = 0;
     }
 
@@ -550,7 +549,7 @@ public:
     {
         pn[0] = (unsigned int)b;
         pn[1] = (unsigned int)(b >> 32);
-        for (int i = 2; i < WIDTH; i++)
+        for (int i = 2; i < WIDTH; ++i)
             pn[i] = 0;
         return *this;
     }
@@ -744,13 +743,13 @@ inline int Testuint256AdHoc(std::vector<std::string> vArg)
     }
 
 
-    for (int i = 0; i < 100; i++)
+    for (int i = 0; i < 100; ++i)
     {
         uint256 k = (~uint256(0) >> i);
         printf("%s\n", k.ToString().c_str());
     }
 
-    for (int i = 0; i < 100; i++)
+    for (int i = 0; i < 100; ++i)
     {
         uint256 k = (~uint256(0) << i);
         printf("%s\n", k.ToString().c_str());
