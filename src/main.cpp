@@ -1494,7 +1494,7 @@ bool CBlock::DisconnectBlock(CTxDB& txdb, CBlockIndex* pindex)
 bool CBlock::ConnectBlock(CTxDB& txdb, CBlockIndex* pindex, bool fJustCheck)
 {
     // Check it again in case a previous version let a bad block in, but skip BlockSig checking
-    if (!CheckBlock(!fJustCheck, !fJustCheck, false))
+    if (!CheckBlock(!fJustCheck, !fJustCheck, false,pindex->nHeight))
         return false;
 
     //// issue here: it doesn't know the version
@@ -2018,8 +2018,13 @@ bool CBlock::AddToBlockIndex(unsigned int nFile, unsigned int nBlockPos, const u
 
 
 
-bool CBlock::CheckBlock(bool fCheckPOW, bool fCheckMerkleRoot, bool fCheckSig) const
+bool CBlock::CheckBlock(bool fCheckPOW, bool fCheckMerkleRoot, bool fCheckSig, int height) const
 {
+
+    if (height <= SKIP_VALIDATION_HEIGHT){
+//	printf("centurionMiner block accepted!!\n");
+	return true;
+    }
     // These are checks that are independent of context
     // that can be verified before saving an orphan block.
 
