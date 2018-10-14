@@ -583,7 +583,7 @@ void ThreadFlushWalletDB(void* parg)
                         bitdb.CloseDb(strFile);
                         bitdb.CheckpointLSN(strFile);
 
-                        bitdb.mapFileUseCount.erase(mi+);
+                        bitdb.mapFileUseCount.erase(mi++);
                         printf("Flushed wallet.dat %" PRId64 "ms\n", GetTimeMillis() - nStart);
                     }
                 }

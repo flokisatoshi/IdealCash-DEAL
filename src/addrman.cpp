@@ -351,7 +351,8 @@ bool CAddrMan::Add_(const CAddress &addr, const CNetAddr& source, int64_t nTimeP
         pinfo = Create(addr, source, &nId);
         pinfo->nTime = max((int64_t)0, (int64_t)pinfo->nTime - nTimePenalty);
 //        printf("Added %s [nTime=%fhr]\n", pinfo->ToString().c_str(), (GetAdjustedTime() - pinfo->nTime) / 3600.0);
-        ++fNew = true;
+        ++nNew;
+	fNew=true;
     }
 
     int nUBucket = pinfo->GetNewBucket(nKey, source);
