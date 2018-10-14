@@ -81,7 +81,7 @@ void Shutdown(void* parg)
     if (fFirstThread)
     {
         fShutdown = true;
-        nTransactionsUpdated++;
+        ++nTransactionsUpdated;
 //        CTxDB().Close();
         bitdb.Flush(false);
         StopNode();
@@ -185,12 +185,11 @@ bool AppInit(int argc, char* argv[])
 extern void noui_connect();
 int main(int argc, char* argv[])
 {
-    bool fRet = false;
 
     // Connect bitcoind signal handlers
     noui_connect();
 
-    fRet = AppInit(argc, argv);
+    bool fRet  = AppInit(argc, argv);
 
     if (fRet && fDaemon)
         return 0;
@@ -642,9 +641,10 @@ bool AppInit2()
     fUseUPnP = GetBoolArg("-upnp", USE_UPNP);
 #endif
 
-    bool fBound = false;
+    //bool fBound = false;
     if (!fNoListen)
     {
+    	bool fBound = false;
         std::string strError;
         if (mapArgs.count("-bind")) {
             BOOST_FOREACH(std::string strBind, mapMultiArgs["-bind"]) {

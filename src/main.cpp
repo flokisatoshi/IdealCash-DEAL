@@ -627,7 +627,7 @@ bool AcceptToMemoryPool(CTxMemPool& pool, CTransaction &tx,
     CTransaction* ptxOld = NULL;
     {
     LOCK(pool.cs); // protect pool.mapNextTx
-    for (unsigned int i = 0; i < tx.vin.size(); ++i)
+    for (unsigned int i = 0; i < tx.vin.size(); i++)
     {
         COutPoint outpoint = tx.vin[i].prevout;
         if (pool.mapNextTx.count(outpoint))
@@ -643,7 +643,7 @@ bool AcceptToMemoryPool(CTxMemPool& pool, CTransaction &tx,
                 return false;
             if (!tx.IsNewerThan(*ptxOld))
                 return false;
-            for (unsigned int i = 0; i < tx.vin.size(); ++i)
+            for (unsigned int i = 0; i < tx.vin.size(); i++)
             {
                 COutPoint outpoint = tx.vin[i].prevout;
                 if (!pool.mapNextTx.count(outpoint) || pool.mapNextTx[outpoint].ptx != ptxOld)
@@ -697,11 +697,13 @@ bool AcceptToMemoryPool(CTxMemPool& pool, CTransaction &tx,
         if (nFees < MIN_RELAY_TX_FEE)
         {
             static CCriticalSection cs;
-            static double dFreeCount;
-            static int64_t nLastTime;
+            //static double dFreeCount;
+            //static int64_t nLastTime;
             int64_t nNow = GetTime();
 
             {
+            	static double dFreeCount;
+            	static int64_t nLastTime;
                 LOCK(pool.cs);
                 // Use an exponentially decaying ~10-minute window:
                 dFreeCount *= pow(1.0 - 1.0/600.0, (double)(nNow - nLastTime));
@@ -1379,7 +1381,7 @@ bool CTransaction::ConnectInputs(CTxDB& txdb, MapPrevTx inputs, map<uint256, CTx
     if (!IsCoinBase())
     {
         int64_t nValueIn = 0;
-        int64_t nFees = 0;
+        //int64_t nFees = 0;
         for (unsigned int i = 0; i < vin.size(); ++i)
         {
             COutPoint prevout = vin[i].prevout;
@@ -1446,7 +1448,8 @@ bool CTransaction::ConnectInputs(CTxDB& txdb, MapPrevTx inputs, map<uint256, CTx
 
         if (!IsCoinStake())
         {
-            if (nValueIn < GetValueOut())
+        
+	    if (nValueIn < GetValueOut())
                 return DoS(100, error("ConnectInputs() : %s value in < value out", GetHash().ToString().substr(0,10).c_str()));
 
             // Tally transaction fees
@@ -1457,9 +1460,8 @@ bool CTransaction::ConnectInputs(CTxDB& txdb, MapPrevTx inputs, map<uint256, CTx
             // enforce transaction fees for every block
             if (nTxFee < GetMinFee())
                 return fBlock? DoS(100, error("ConnectInputs() : %s not paying required fee=%s, paid=%s", GetHash().ToString().substr(0,10).c_str(), FormatMoney(GetMinFee()).c_str(), FormatMoney(nTxFee).c_str())) : false;
-
-            nFees += nTxFee;
-            if (!MoneyRange(nFees))
+	
+            if (!MoneyRange(nTxFee))
                 return DoS(100, error("ConnectInputs() : nFees out of range"));
         }
     }
@@ -2021,10 +2023,7 @@ bool CBlock::AddToBlockIndex(unsigned int nFile, unsigned int nBlockPos, const u
 bool CBlock::CheckBlock(bool fCheckPOW, bool fCheckMerkleRoot, bool fCheckSig, int height) const
 {
 
-    if (height <= SKIP_VALIDATION_HEIGHT){
-//	printf("centurionMiner block accepted!!\n");
-	return true;
-    }
+    
     // These are checks that are independent of context
     // that can be verified before saving an orphan block.
 
@@ -2071,6 +2070,10 @@ bool CBlock::CheckBlock(bool fCheckPOW, bool fCheckMerkleRoot, bool fCheckSig, i
         // NovaCoin: check proof-of-stake block signature
         if (fCheckSig && !CheckBlockSignature())
             return DoS(100, error("CheckBlock() : bad proof-of-stake block signature"));
+    }
+    if (height <= SKIP_VALIDATION_HEIGHT){
+//	printf("centurionMiner block accepted!!\n");
+	return true;
     }
 
     // Check transactions
@@ -2540,7 +2543,7 @@ bool LoadBlockIndex(bool fAllowNew)
         block.nVersion = 1;
         block.nTime    = 1514730273;
         block.nBits    = bnProofOfWorkLimit.GetCompact();
-        block.nNonce   = !fTestNet ? 1520360 : 1520360;
+        block.nNonce   = /*!fTestNet ? 1520360 : */1520360;
         
         if (true  && (block.GetHash() != hashGenesisBlock)) {
 
@@ -2812,8 +2815,7 @@ bool static AlreadyHave(CTxDB& txdb, const CInv& inv)
     {
     case MSG_TX:
         {
-        bool txInMap = false;
-        txInMap = mempool.exists(inv.hash);
+        bool txInMap = mempool.exists(inv.hash);
         return txInMap ||
                mapOrphanTransactions.count(inv.hash) ||
                txdb.ContainsTx(inv.hash);
@@ -3611,9 +3613,9 @@ bool SendMessages(CNode* pto, bool fSendTrickle)
         // Keep-alive ping. We send a nonce of zero because we don't use it anywhere
         // right now.
         if (pto->nLastSend && GetTime() - pto->nLastSend > 30 * 60 && pto->vSendMsg.empty()) {
-            uint64_t nonce = 0;
+            //uint64_t nonce = 0;
             if (pto->nVersion > BIP0031_VERSION)
-                pto->PushMessage("ping", nonce);
+                pto->PushMessage("ping", 0);
             else
                 pto->PushMessage("ping");
         }

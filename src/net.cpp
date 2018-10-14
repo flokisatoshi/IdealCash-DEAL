@@ -168,13 +168,10 @@ bool RecvLine(SOCKET hSocket, string& strLine)
             strLine += c;
             if (strLine.size() >= 9000)
                 return true;
-        }
-        else if (nBytes <= 0)
-        {
+        }else/* if (nBytes <= 0)*/ {
             if (fShutdown)
                 return false;
-            if (nBytes < 0)
-            {
+            if (nBytes < 0) {
                 int nErr = WSAGetLastError();
                 if (nErr == WSAEMSGSIZE)
                     continue;
@@ -621,7 +618,7 @@ bool CNode::Misbehaving(int howmuch)
 
 #undef X
 #define X(name) stats.name = name
-void CNode::copyStats(CNodeStats &stats)
+const void CNode::copyStats(CNodeStats &stats)
 {
     X(nServices);
     X(nLastSend);
@@ -1614,7 +1611,7 @@ void ThreadOpenAddedConnections2(void* parg)
                         if (pnode->addr == addrNode)
                         {
                             it = vservConnectAddresses.erase(it);
-                            it--;
+                            --it;
                             break;
                         }
         }

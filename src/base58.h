@@ -268,7 +268,7 @@ public:
     CBitcoinAddressVisitor(CBitcoinAddress *addrIn) : addr(addrIn) { }
     bool operator()(const CKeyID &id) const;
     bool operator()(const CScriptID &id) const;
-    bool operator()(const CNoDestination &no) const;
+    bool operator()(const CNoDestination &id) const;
 };
 
 class CBitcoinAddress : public CBase58Data

@@ -221,7 +221,7 @@ bool CAlert::ProcessAlert(bool fThread)
                 mapAlerts.erase(mi++);
             }
             else
-                mi++;
+                ++mi;
         }
 
         // Check if this alert has been cancelled
@@ -252,7 +252,7 @@ bool CAlert::ProcessAlert(bool fThread)
                 // even possibly remotely dangerous like & or >
                 std::string safeChars("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ01234567890 .,;_/:?@");
                 std::string safeStatus;
-                for (std::string::size_type i = 0; i < strStatusBar.size(); i++)
+                for (std::string::size_type i = 0; i < strStatusBar.size(); ++i)
                 {
                     if (safeChars.find(strStatusBar[i]) != std::string::npos)
                         safeStatus.push_back(strStatusBar[i]);

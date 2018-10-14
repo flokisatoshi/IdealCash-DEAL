@@ -335,7 +335,7 @@ class Benchmark {
     fprintf(stdout, "------------------------------------------------\n");
   }
 
-  void PrintWarnings() {
+  static void PrintWarnings() {
 #if defined(__GNUC__) && !defined(__OPTIMIZE__)
     fprintf(stdout,
             "WARNING: Optimization is disabled: benchmarks unnecessarily slow\n"
@@ -356,7 +356,7 @@ class Benchmark {
     }
   }
 
-  void PrintEnvironment() {
+  static void PrintEnvironment() {
     fprintf(stderr, "LevelDB:    version %d.%d\n",
             kMajorVersion, kMinorVersion);
 
@@ -615,7 +615,7 @@ class Benchmark {
     delete[] arg;
   }
 
-  void Crc32c(ThreadState* thread) {
+  static void Crc32c(ThreadState* thread) {
     // Checksum about 500MB of data total
     const int size = 4096;
     const char* label = "(4K per op)";
@@ -634,7 +634,7 @@ class Benchmark {
     thread->stats.AddMessage(label);
   }
 
-  void AcquireLoad(ThreadState* thread) {
+  static void AcquireLoad(ThreadState* thread) {
     int dummy;
     port::AtomicPointer ap(&dummy);
     int count = 0;
@@ -650,7 +650,7 @@ class Benchmark {
     if (ptr == NULL) exit(1); // Disable unused variable warning.
   }
 
-  void SnappyCompress(ThreadState* thread) {
+  static void SnappyCompress(ThreadState* thread) {
     RandomGenerator gen;
     Slice input = gen.Generate(Options().block_size);
     int64_t bytes = 0;
@@ -675,7 +675,7 @@ class Benchmark {
     }
   }
 
-  void SnappyUncompress(ThreadState* thread) {
+  static void SnappyUncompress(ThreadState* thread) {
     RandomGenerator gen;
     Slice input = gen.Generate(Options().block_size);
     std::string compressed;

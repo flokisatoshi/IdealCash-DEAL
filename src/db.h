@@ -49,7 +49,7 @@ public:
     CDBEnv();
     ~CDBEnv();
     void MakeMock();
-    bool IsMock() { return fMockDb; };
+    const bool IsMock() { return fMockDb; };
 
     /*
      * Verify that database file strFile is OK. If it is not,
@@ -225,7 +225,7 @@ protected:
         return pcursor;
     }
 
-    int ReadAtCursor(Dbc* pcursor, CDataStream& ssKey, CDataStream& ssValue, unsigned int fFlags=DB_NEXT)
+    static int ReadAtCursor(Dbc* pcursor, CDataStream& ssKey, CDataStream& ssValue, unsigned int fFlags=DB_NEXT)
     {
         // Read at cursor
         Dbt datKey;

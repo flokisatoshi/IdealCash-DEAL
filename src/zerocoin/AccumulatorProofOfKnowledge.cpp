@@ -122,7 +122,6 @@ bool AccumulatorProofOfKnowledge:: Verify(const Accumulator& a, const Bignum& va
 	Bignum t_3_prime = ((a.getValue()).pow_mod(c, params->accumulatorModulus) * C_u.pow_mod(s_alpha, params->accumulatorModulus) * ((h_n.inverse(params->accumulatorModulus)).pow_mod(s_beta, params->accumulatorModulus))) % params->accumulatorModulus;
 	Bignum t_4_prime = (C_r.pow_mod(s_alpha, params->accumulatorModulus) * ((h_n.inverse(params->accumulatorModulus)).pow_mod(s_delta, params->accumulatorModulus)) * ((g_n.inverse(params->accumulatorModulus)).pow_mod(s_beta, params->accumulatorModulus))) % params->accumulatorModulus;
 
-	bool result = false;
 
 	bool result_st1 = (st_1 == st_1_prime);
 	bool result_st2 = (st_2 == st_2_prime);
@@ -135,7 +134,7 @@ bool AccumulatorProofOfKnowledge:: Verify(const Accumulator& a, const Bignum& va
 
 	bool result_range = ((s_alpha >= -(params->maxCoinValue * Bignum(2).pow(params->k_prime + params->k_dprime + 1))) && (s_alpha <= (params->maxCoinValue * Bignum(2).pow(params->k_prime + params->k_dprime + 1))));
 
-	result = result_st1 && result_st2 && result_st3 && result_t1 && result_t2 && result_t3 && result_t4 && result_range;
+	bool result = result_st1 && result_st2 && result_st3 && result_t1 && result_t2 && result_t3 && result_t4 && result_range;
 
 	return result;
 }

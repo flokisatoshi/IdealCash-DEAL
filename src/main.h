@@ -374,7 +374,7 @@ public:
         scriptPubKey.clear();
     }
 
-    bool IsNull()
+    const bool IsNull()
     {
         return (nValue == -1);
     }
@@ -546,7 +546,7 @@ public:
         @return maximum number of sigops required to validate this transaction's inputs
         @see CTransaction::FetchInputs
      */
-    unsigned int GetP2SHSigOpCount(const MapPrevTx& mapInputs) const;
+    unsigned int GetP2SHSigOpCount(const MapPrevTx& inputs) const;
 
     /** Amount of bitcoins spent by this transaction.
         @return sum of all outputs (note: does not include fees)
@@ -571,11 +571,11 @@ public:
         @return	Sum of value of all inputs (scriptSigs)
         @see CTransaction::FetchInputs
      */
-    int64_t GetValueIn(const MapPrevTx& mapInputs) const;
+    int64_t GetValueIn(const MapPrevTx& inputs) const;
 
     int64_t GetMinFee(unsigned int nBlockSize=1, enum GetMinFee_mode mode=GMF_BLOCK, unsigned int nBytes = 0) const;
 
-    bool ReadFromDisk(CDiskTxPos pos, FILE** pfileRet=NULL)
+    const bool ReadFromDisk(CDiskTxPos pos, FILE** pfileRet=NULL)
     {
         CAutoFile filein = CAutoFile(OpenBlockFile(pos.nFile, 0, pfileRet ? "rb+" : "rb"), SER_DISK, CLIENT_VERSION);
         if (!filein)
@@ -788,7 +788,7 @@ public:
         vSpent.clear();
     }
 
-    bool IsNull()
+    const bool IsNull()
     {
         return pos.IsNull();
     }
@@ -1080,7 +1080,7 @@ public:
     bool CheckBlock(bool fCheckPOW=true, bool fCheckMerkleRoot=true, bool fCheckSig=true, int height=2) const;
     bool AcceptBlock();
     bool GetCoinAge(uint64_t& nCoinAge) const; // ppcoin: calculate total coin age spent in block
-    bool SignBlock(CWallet& keystore, int64_t nFees);
+    bool SignBlock(CWallet& wallet, int64_t nFees);
     bool CheckBlockSignature() const;
 
 private:
@@ -1226,8 +1226,8 @@ public:
         return (pnext || this == pindexBest);
     }
 
-    bool CheckIndex() const
-    {
+    static bool CheckIndex() /*const*/
+    {	/*WTF ? */
         return true;
     }
 
@@ -1464,7 +1464,7 @@ public:
         vHave.clear();
     }
 
-    bool IsNull()
+    const bool IsNull()
     {
         return vHave.empty();
     }

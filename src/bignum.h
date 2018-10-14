@@ -49,7 +49,7 @@ public:
     operator BN_CTX*() { return pctx; }
     BN_CTX& operator*() { return *pctx; }
     BN_CTX** operator&() { return &pctx; }
-    bool operator!() { return (pctx == NULL); }
+    const bool operator!() { return (pctx == NULL); }
 };
 
 

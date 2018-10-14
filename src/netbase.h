@@ -41,7 +41,7 @@ class CNetAddr
         explicit CNetAddr(const char *pszIp, bool fAllowLookup = false);
         explicit CNetAddr(const std::string &strIp, bool fAllowLookup = false);
         void Init();
-        void SetIP(const CNetAddr& ip);
+        void SetIP(const CNetAddr& ipIn);
         bool SetSpecial(const std::string &strName); // for Tor and I2P addresses
         bool IsIPv4() const;    // IPv4 mapped address (::FFFF:0:0/96, 0.0.0.0/0)
         bool IsIPv6() const;    // IPv6 address (not mapped IPv4, not Tor/I2P)
@@ -71,7 +71,7 @@ class CNetAddr
         int GetReachabilityFrom(const CNetAddr *paddrPartner = NULL) const;
         void print() const;
 
-        CNetAddr(const struct in6_addr& pipv6Addr);
+        CNetAddr(const struct in6_addr& ipv6Addr);
         bool GetIn6Addr(struct in6_addr* pipv6Addr) const;
 
         friend bool operator==(const CNetAddr& a, const CNetAddr& b);
@@ -92,8 +92,8 @@ class CService : public CNetAddr
 
     public:
         CService();
-        CService(const CNetAddr& ip, unsigned short port);
-        CService(const struct in_addr& ipv4Addr, unsigned short port);
+        CService(const CNetAddr& cip, unsigned short portIn);
+        CService(const struct in_addr& ipv4Addr, unsigned short portIn);
         CService(const struct sockaddr_in& addr);
         explicit CService(const char *pszIpPort, int portDefault, bool fAllowLookup = false);
         explicit CService(const char *pszIpPort, bool fAllowLookup = false);
@@ -113,7 +113,7 @@ class CService : public CNetAddr
         std::string ToStringIPPort() const;
         void print() const;
 
-        CService(const struct in6_addr& ipv6Addr, unsigned short port);
+        CService(const struct in6_addr& ipv6Addr, unsigned short portIn);
         CService(const struct sockaddr_in6& addr);
 
         IMPLEMENT_SERIALIZE
@@ -140,7 +140,7 @@ bool LookupHost(const char *pszName, std::vector<CNetAddr>& vIP, unsigned int nM
 bool Lookup(const char *pszName, CService& addr, int portDefault = 0, bool fAllowLookup = true);
 bool Lookup(const char *pszName, std::vector<CService>& vAddr, int portDefault = 0, bool fAllowLookup = true, unsigned int nMaxSolutions = 0);
 bool LookupNumeric(const char *pszName, CService& addr, int portDefault = 0);
-bool ConnectSocket(const CService &addr, SOCKET& hSocketRet, int nTimeout = nConnectTimeout);
+bool ConnectSocket(const CService &addrDest, SOCKET& hSocketRet, int nTimeout = nConnectTimeout);
 bool ConnectSocketByName(CService &addr, SOCKET& hSocketRet, const char *pszDest, int portDefault = 0, int nTimeout = nConnectTimeout);
 
 #endif

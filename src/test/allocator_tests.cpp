@@ -12,13 +12,13 @@ static size_t last_lock_len, last_unlock_len;
 class TestLocker
 {
 public:
-    bool Lock(const void *addr, size_t len)
+    static bool Lock(const void *addr, size_t len)
     {
         last_lock_addr = addr;
         last_lock_len = len;
         return true;
     }
-    bool Unlock(const void *addr, size_t len)
+    static bool Unlock(const void *addr, size_t len)
     {
         last_unlock_addr = addr;
         last_unlock_len = len;
