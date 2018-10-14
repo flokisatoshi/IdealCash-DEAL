@@ -19,21 +19,22 @@
 /* STANDARD UPNP LIBRARY
    You have to use this if you have installed as package system
    and not from source
-/
+*/
+
 #include <miniupnpc/miniwget.h>
 #include <miniupnpc/miniupnpc.h>
 #include <miniupnpc/upnpcommands.h>
 #include <miniupnpc/upnperrors.h>
-*/
+
 /* SELF-COMPILED LIBRARY
    You have to use this if you have compiled the latest version of
    miniupnpc (make ; make install)
-*/
 
 #include "/usr/include/miniupnpc/miniwget.h"
 #include "/usr/include/miniupnpc/miniupnpc.h"
 #include "/usr/include/miniupnpc/upnpcommands.h"
 #include "/usr/include/miniupnpc/upnperrors.h"
+*/
 
 #endif
 
