@@ -239,12 +239,12 @@ void LRUCache::Unref(LRUHandle* e) {
   }
 }
 
-static void LRUCache::LRU_Remove(LRUHandle* e) {
+void LRUCache::LRU_Remove(LRUHandle* e) {
   e->next->prev = e->prev;
   e->prev->next = e->next;
 }
 
-static void LRUCache::LRU_Append(LRUHandle* list, LRUHandle* e) {
+void LRUCache::LRU_Append(LRUHandle* list, LRUHandle* e) {
   // Make "e" newest entry by inserting just before *list
   e->next = list;
   e->prev = list->prev;
