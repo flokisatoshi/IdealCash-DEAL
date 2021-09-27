@@ -123,7 +123,7 @@ bool Wait(int nSeconds)
     if (fShutdown)
         return false;
     printf("IRC waiting %d seconds to reconnect\n", nSeconds);
-    for (int i = 0; i < nSeconds; i++)
+    for (int i = 0; i < nSeconds; ++i)
     {
         if (fShutdown)
             return false;
@@ -260,7 +260,7 @@ void ThreadIRCSeed2(void* parg)
         if (!fNoListen && GetLocal(addrLocal, &addrIPv4) && nNameRetry<3)
             strMyName = EncodeAddress(GetLocalAddress(&addrConnect));
         if (strMyName == "")
-            strMyName = strprintf("x%"PRIu64"", GetRand(1000000000));
+            strMyName = strprintf("x%" PRIu64 "", GetRand(1000000000));
 
         Send(hSocket, strprintf("NICK %s\r", strMyName.c_str()).c_str());
         Send(hSocket, strprintf("USER %s 8 * : %s\r", strMyName.c_str(), strMyName.c_str()).c_str());
@@ -273,7 +273,7 @@ void ThreadIRCSeed2(void* parg)
             if (nRet == 2)
             {
                 printf("IRC name already in use\n");
-                nNameRetry++;
+                ++nNameRetry;
                 Wait(10);
                 continue;
             }
@@ -355,7 +355,7 @@ void ThreadIRCSeed2(void* parg)
                     addr.nTime = GetAdjustedTime();
                     if (addrman.Add(addr, addrConnect, 51 * 60))
                         printf("IRC got new address: %s\n", addr.ToString().c_str());
-                    nGotIRCAddresses++;
+                    ++nGotIRCAddresses;
                 }
                 else
                 {

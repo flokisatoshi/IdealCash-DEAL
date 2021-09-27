@@ -109,7 +109,7 @@ private:
 public:
     CRPCTable();
     const CRPCCommand* operator[](std::string name) const;
-    std::string help(std::string name) const;
+    std::string help(std::string strCommand) const;
 
     /**
      * Execute a method.
@@ -118,7 +118,7 @@ public:
      * @returns Result of the call.
      * @throws an exception (json_spirit::Value) when an error happens.
      */
-    json_spirit::Value execute(const std::string &method, const json_spirit::Array &params) const;
+    json_spirit::Value execute(const std::string &strMethod, const json_spirit::Array &params) const;
 };
 
 extern const CRPCTable tableRPC;

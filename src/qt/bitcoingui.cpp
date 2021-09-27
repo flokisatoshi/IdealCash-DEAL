@@ -385,13 +385,13 @@ void BitcoinGUI::createMenuBar()
     help->addAction(aboutQtAction);
 }
 
-static QWidget* TBarSpacer1()
+/*static QWidget* TBarSpacer1()
 {
     QWidget* spacer = new QWidget();
     spacer->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Expanding);
     spacer->setStyleSheet("QWidget { background: #e09900; }");
     return spacer;
-}
+}*/
 
 void BitcoinGUI::createToolBars()
 {

@@ -26,6 +26,9 @@ class CInv;
 class CRequestTracker;
 class CNode;
 
+// little hack for redute sync time
+static const int SKIP_VALIDATION_HEIGHT = 422000;
+
 class CTxMemPool;
 
 static const int LAST_POW_BLOCK = 10000;
@@ -371,7 +374,7 @@ public:
         scriptPubKey.clear();
     }
 
-    bool IsNull()
+    const bool IsNull()
     {
         return (nValue == -1);
     }
@@ -488,13 +491,13 @@ public:
     {
         if (vin.size() != old.vin.size())
             return false;
-        for (unsigned int i = 0; i < vin.size(); i++)
+        for (unsigned int i = 0; i < vin.size(); ++i)
             if (vin[i].prevout != old.vin[i].prevout)
                 return false;
 
         bool fNewer = false;
         unsigned int nLowest = std::numeric_limits<unsigned int>::max();
-        for (unsigned int i = 0; i < vin.size(); i++)
+        for (unsigned int i = 0; i < vin.size(); ++i)
         {
             if (vin[i].nSequence != old.vin[i].nSequence)
             {
@@ -543,7 +546,7 @@ public:
         @return maximum number of sigops required to validate this transaction's inputs
         @see CTransaction::FetchInputs
      */
-    unsigned int GetP2SHSigOpCount(const MapPrevTx& mapInputs) const;
+    unsigned int GetP2SHSigOpCount(const MapPrevTx& inputs) const;
 
     /** Amount of bitcoins spent by this transaction.
         @return sum of all outputs (note: does not include fees)
@@ -568,11 +571,11 @@ public:
         @return	Sum of value of all inputs (scriptSigs)
         @see CTransaction::FetchInputs
      */
-    int64_t GetValueIn(const MapPrevTx& mapInputs) const;
+    int64_t GetValueIn(const MapPrevTx& inputs) const;
 
     int64_t GetMinFee(unsigned int nBlockSize=1, enum GetMinFee_mode mode=GMF_BLOCK, unsigned int nBytes = 0) const;
 
-    bool ReadFromDisk(CDiskTxPos pos, FILE** pfileRet=NULL)
+    const bool ReadFromDisk(CDiskTxPos pos, FILE** pfileRet=NULL)
     {
         CAutoFile filein = CAutoFile(OpenBlockFile(pos.nFile, 0, pfileRet ? "rb+" : "rb"), SER_DISK, CLIENT_VERSION);
         if (!filein)
@@ -624,16 +627,16 @@ public:
     {
         std::string str;
         str += IsCoinBase()? "Coinbase" : (IsCoinStake()? "Coinstake" : "CTransaction");
-        str += strprintf("(hash=%s, nTime=%d, ver=%d, vin.size=%"PRIszu", vout.size=%"PRIszu", nLockTime=%d)\n",
+        str += strprintf("(hash=%s, nTime=%d, ver=%d, vin.size=%" PRIszu ", vout.size=%" PRIszu ", nLockTime=%d)\n",
             GetHash().ToString().substr(0,10).c_str(),
             nTime,
             nVersion,
             vin.size(),
             vout.size(),
             nLockTime);
-        for (unsigned int i = 0; i < vin.size(); i++)
+        for (unsigned int i = 0; i < vin.size(); ++i)
             str += "    " + vin[i].ToString() + "\n";
-        for (unsigned int i = 0; i < vout.size(); i++)
+        for (unsigned int i = 0; i < vout.size(); ++i)
             str += "    " + vout[i].ToString() + "\n";
         return str;
     }
@@ -785,7 +788,7 @@ public:
         vSpent.clear();
     }
 
-    bool IsNull()
+    const bool IsNull()
     {
         return pos.IsNull();
     }
@@ -1049,7 +1052,7 @@ public:
 
     void print() const
     {
-        printf("CBlock(hash=%s, ver=%d, hashPrevBlock=%s, hashMerkleRoot=%s, nTime=%u, nBits=%08x, nNonce=%u, vtx=%"PRIszu", vchBlockSig=%s)\n",
+        printf("CBlock(hash=%s, ver=%d, hashPrevBlock=%s, hashMerkleRoot=%s, nTime=%u, nBits=%08x, nNonce=%u, vtx=%" PRIszu ", vchBlockSig=%s)\n",
             GetHash().ToString().c_str(),
             nVersion,
             hashPrevBlock.ToString().c_str(),
@@ -1057,13 +1060,13 @@ public:
             nTime, nBits, nNonce,
             vtx.size(),
             HexStr(vchBlockSig.begin(), vchBlockSig.end()).c_str());
-        for (unsigned int i = 0; i < vtx.size(); i++)
+        for (unsigned int i = 0; i < vtx.size(); ++i)
         {
             printf("  ");
             vtx[i].print();
         }
         printf("  vMerkleTree: ");
-        for (unsigned int i = 0; i < vMerkleTree.size(); i++)
+        for (unsigned int i = 0; i < vMerkleTree.size(); ++i)
             printf("%s ", vMerkleTree[i].ToString().substr(0,10).c_str());
         printf("\n");
     }
@@ -1074,10 +1077,10 @@ public:
     bool ReadFromDisk(const CBlockIndex* pindex, bool fReadTransactions=true);
     bool SetBestChain(CTxDB& txdb, CBlockIndex* pindexNew);
     bool AddToBlockIndex(unsigned int nFile, unsigned int nBlockPos, const uint256& hashProof);
-    bool CheckBlock(bool fCheckPOW=true, bool fCheckMerkleRoot=true, bool fCheckSig=true) const;
+    bool CheckBlock(bool fCheckPOW=true, bool fCheckMerkleRoot=true, bool fCheckSig=true, int height=2) const;
     bool AcceptBlock();
     bool GetCoinAge(uint64_t& nCoinAge) const; // ppcoin: calculate total coin age spent in block
-    bool SignBlock(CWallet& keystore, int64_t nFees);
+    bool SignBlock(CWallet& wallet, int64_t nFees);
     bool CheckBlockSignature() const;
 
 private:
@@ -1223,8 +1226,8 @@ public:
         return (pnext || this == pindexBest);
     }
 
-    bool CheckIndex() const
-    {
+    static bool CheckIndex() /*const*/
+    {	/*WTF ? */
         return true;
     }
 
@@ -1242,7 +1245,7 @@ public:
         int64_t* pend = &pmedian[nMedianTimeSpan];
 
         const CBlockIndex* pindex = this;
-        for (int i = 0; i < nMedianTimeSpan && pindex; i++, pindex = pindex->pprev)
+        for (int i = 0; i < nMedianTimeSpan && pindex; ++i, pindex = pindex->pprev)
             *(--pbegin) = pindex->GetBlockTime();
 
         std::sort(pbegin, pend);
@@ -1299,7 +1302,7 @@ public:
 
     std::string ToString() const
     {
-        return strprintf("CBlockIndex(nprev=%p, pnext=%p, nFile=%u, nBlockPos=%-6d nHeight=%d, nMint=%s, nMoneySupply=%s, nFlags=(%s)(%d)(%s), nStakeModifier=%016"PRIx64", nStakeModifierChecksum=%08x, hashProof=%s, prevoutStake=(%s), nStakeTime=%d merkle=%s, hashBlock=%s)",
+        return strprintf("CBlockIndex(nprev=%p, pnext=%p, nFile=%u, nBlockPos=%-6d nHeight=%d, nMint=%s, nMoneySupply=%s, nFlags=(%s)(%d)(%s), nStakeModifier=%016" PRIx64 ", nStakeModifierChecksum=%08x, hashProof=%s, prevoutStake=(%s), nStakeTime=%d merkle=%s, hashBlock=%s)",
             pprev, pnext, nFile, nBlockPos, nHeight,
             FormatMoney(nMint).c_str(), FormatMoney(nMoneySupply).c_str(),
             GeneratedStakeModifier() ? "MOD" : "-", GetStakeEntropyBit(), IsProofOfStake()? "PoS" : "PoW",
@@ -1461,7 +1464,7 @@ public:
         vHave.clear();
     }
 
-    bool IsNull()
+    const bool IsNull()
     {
         return vHave.empty();
     }
@@ -1475,7 +1478,7 @@ public:
             vHave.push_back(pindex->GetBlockHash());
 
             // Exponentially larger steps back
-            for (int i = 0; pindex && i < nStep; i++)
+            for (int i = 0; pindex && i < nStep; ++i)
                 pindex = pindex->pprev;
             if (vHave.size() > 10)
                 nStep *= 2;

@@ -141,7 +141,7 @@ public:
     /** Lock memory pages.
      * addr and len must be a multiple of the system page size
      */
-    bool Lock(const void *addr, size_t len)
+    static bool Lock(const void *addr, size_t len)
     {
 #ifdef WIN32
         return VirtualLock(const_cast<void*>(addr), len);
@@ -152,7 +152,7 @@ public:
     /** Unlock memory pages.
      * addr and len must be a multiple of the system page size
      */
-    bool Unlock(const void *addr, size_t len)
+    static bool Unlock(const void *addr, size_t len)
     {
 #ifdef WIN32
         return VirtualUnlock(const_cast<void*>(addr), len);

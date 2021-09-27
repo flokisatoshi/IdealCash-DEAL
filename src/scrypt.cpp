@@ -115,14 +115,14 @@ static inline void scrypt_core(unsigned int *X, unsigned int *V)
 {
     unsigned int i, j, k;
 
-    for (i = 0; i < 1024; i++) {
+    for (i = 0; i < 1024; ++i) {
         memcpy(&V[i * 32], X, 128);
         xor_salsa8(&X[0], &X[16]);
         xor_salsa8(&X[16], &X[0]);
     }
-    for (i = 0; i < 1024; i++) {
+    for (i = 0; i < 1024; ++i) {
         j = 32 * (X[16] & 1023);
-        for (k = 0; k < 32; k++)
+        for (k = 0; k < 32; ++k)
             X[k] ^= V[j + k];
         xor_salsa8(&X[0], &X[16]);
         xor_salsa8(&X[16], &X[0]);
@@ -181,7 +181,7 @@ uint256 scrypt_salted_multiround_hash(const void* input, size_t inputlen, const 
     uint256 resultHash = scrypt_salted_hash(input, inputlen, salt, saltlen);
     uint256 transitionalHash = resultHash;
 
-    for(unsigned int i = 1; i < nRounds; i++)
+    for(unsigned int i = 1; i < nRounds; ++i)
     {
         resultHash = scrypt_salted_hash(input, inputlen, (const void*)&transitionalHash, 32);
         transitionalHash = resultHash;

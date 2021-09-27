@@ -71,7 +71,7 @@ double CAddrInfo::GetChance(int64_t nNow) const
         fChance *= 0.01;
 
     // deprioritize 50% after each failed attempt
-    for (int n=0; n<nAttempts; n++)
+    for (int n=0; n<nAttempts; ++n)
         fChance /= 1.5;
 
     return fChance;
@@ -130,7 +130,7 @@ int CAddrMan::SelectTried(int nKBucket)
     // find the least recently tried among them
     int64_t nOldest = -1;
     int nOldestPos = -1;
-    for (unsigned int i = 0; i < ADDRMAN_TRIED_ENTRIES_INSPECT_ON_EVICT && i < vTried.size(); i++)
+    for (unsigned int i = 0; i < ADDRMAN_TRIED_ENTRIES_INSPECT_ON_EVICT && i < vTried.size(); ++i)
     {
         int nPos = GetRandInt(vTried.size() - i) + i;
         int nTemp = vTried[nPos];
@@ -152,7 +152,7 @@ int CAddrMan::ShrinkNew(int nUBucket)
     std::set<int> &vNew = vvNew[nUBucket];
 
     // first look for deletable items
-    for (std::set<int>::iterator it = vNew.begin(); it != vNew.end(); it++)
+    for (std::set<int>::iterator it = vNew.begin(); it != vNew.end(); ++it)
     {
         assert(mapInfo.count(*it));
         CAddrInfo &info = mapInfo[*it];
@@ -175,7 +175,7 @@ int CAddrMan::ShrinkNew(int nUBucket)
     int n[4] = {GetRandInt(vNew.size()), GetRandInt(vNew.size()), GetRandInt(vNew.size()), GetRandInt(vNew.size())};
     int nI = 0;
     int nOldest = -1;
-    for (std::set<int>::iterator it = vNew.begin(); it != vNew.end(); it++)
+    for (std::set<int>::iterator it = vNew.begin(); it != vNew.end(); ++it)
     {
         if (nI == n[0] || nI == n[1] || nI == n[2] || nI == n[3])
         {
@@ -183,7 +183,7 @@ int CAddrMan::ShrinkNew(int nUBucket)
             if (nOldest == -1 || mapInfo[*it].nTime < mapInfo[nOldest].nTime)
                 nOldest = *it;
         }
-        nI++;
+        ++nI;
     }
     assert(mapInfo.count(nOldest) == 1);
     CAddrInfo &info = mapInfo[nOldest];
@@ -205,7 +205,7 @@ void CAddrMan::MakeTried(CAddrInfo& info, int nId, int nOrigin)
     assert(vvNew[nOrigin].count(nId) == 1);
 
     // remove the entry from all new buckets
-    for (std::vector<std::set<int> >::iterator it = vvNew.begin(); it != vvNew.end(); it++)
+    for (std::vector<std::set<int> >::iterator it = vvNew.begin(); it != vvNew.end(); ++it)
     {
         if ((*it).erase(nId))
             info.nRefCount--;
@@ -222,7 +222,7 @@ void CAddrMan::MakeTried(CAddrInfo& info, int nId, int nOrigin)
     if (vTried.size() < ADDRMAN_TRIED_BUCKET_SIZE)
     {
         vTried.push_back(nId);
-        nTried++;
+        ++nTried;
         info.fInTried = true;
         return;
     }
@@ -250,7 +250,7 @@ void CAddrMan::MakeTried(CAddrInfo& info, int nId, int nOrigin)
         // otherwise, move it to the new bucket nId came from (there is certainly place there)
         vvNew[nOrigin].insert(vTried[nPos]);
     }
-    nNew++;
+    ++nNew;
 
     vTried[nPos] = nId;
     // we just overwrote an entry in vTried; no need to update nTried
@@ -288,7 +288,7 @@ void CAddrMan::Good_(const CService &addr, int64_t nTime)
     // find a bucket it is in now
     int nRnd = GetRandInt(vvNew.size());
     int nUBucket = -1;
-    for (unsigned int n = 0; n < vvNew.size(); n++)
+    for (unsigned int n = 0; n < vvNew.size(); ++n)
     {
         int nB = (n+nRnd) % vvNew.size();
         std::set<int> &vNew = vvNew[nB];
@@ -343,7 +343,7 @@ bool CAddrMan::Add_(const CAddress &addr, const CNetAddr& source, int64_t nTimeP
 
         // stochastic test: previous nRefCount == N: 2^N times harder to increase it
         int nFactor = 1;
-        for (int n=0; n<pinfo->nRefCount; n++)
+        for (int n=0; n<pinfo->nRefCount; ++n)
             nFactor *= 2;
         if (nFactor > 1 && (GetRandInt(nFactor) != 0))
             return false;
@@ -351,15 +351,15 @@ bool CAddrMan::Add_(const CAddress &addr, const CNetAddr& source, int64_t nTimeP
         pinfo = Create(addr, source, &nId);
         pinfo->nTime = max((int64_t)0, (int64_t)pinfo->nTime - nTimePenalty);
 //        printf("Added %s [nTime=%fhr]\n", pinfo->ToString().c_str(), (GetAdjustedTime() - pinfo->nTime) / 3600.0);
-        nNew++;
-        fNew = true;
+        ++nNew;
+	fNew=true;
     }
 
     int nUBucket = pinfo->GetNewBucket(nKey, source);
     std::set<int> &vNew = vvNew[nUBucket];
     if (!vNew.count(nId))
     {
-        pinfo->nRefCount++;
+        ++pinfo->nRefCount;
         if (vNew.size() == ADDRMAN_NEW_BUCKET_SIZE)
             ShrinkNew(nUBucket);
         vvNew[nUBucket].insert(nId);
@@ -383,7 +383,7 @@ void CAddrMan::Attempt_(const CService &addr, int64_t nTime)
 
     // update info
     info.nLastTry = nTime;
-    info.nAttempts++;
+    ++info.nAttempts;
 }
 
 CAddress CAddrMan::Select_(int nUnkBias)
@@ -420,7 +420,7 @@ CAddress CAddrMan::Select_(int nUnkBias)
             int nPos = GetRandInt(vNew.size());
             std::set<int>::iterator it = vNew.begin();
             while (nPos--)
-                it++;
+                ++it;
             assert(mapInfo.count(*it) == 1);
             CAddrInfo &info = mapInfo[*it];
             if (GetRandInt(1<<30) < fChanceFactor*info.GetChance()*(1<<30))
@@ -438,7 +438,7 @@ int CAddrMan::Check_()
 
     if (vRandom.size() != nTried + nNew) return -7;
 
-    for (std::map<int, CAddrInfo>::iterator it = mapInfo.begin(); it != mapInfo.end(); it++)
+    for (std::map<int, CAddrInfo>::iterator it = mapInfo.begin(); it != mapInfo.end(); ++it)
     {
         int n = (*it).first;
         CAddrInfo &info = (*it).second;
@@ -462,20 +462,20 @@ int CAddrMan::Check_()
     if (setTried.size() != nTried) return -9;
     if (mapNew.size() != nNew) return -10;
 
-    for (int n=0; n<vvTried.size(); n++)
+    for (int n=0; n<vvTried.size(); ++n)
     {
         std::vector<int> &vTried = vvTried[n];
-        for (std::vector<int>::iterator it = vTried.begin(); it != vTried.end(); it++)
+        for (std::vector<int>::iterator it = vTried.begin(); it != vTried.end(); ++it)
         {
             if (!setTried.count(*it)) return -11;
             setTried.erase(*it);
         }
     }
 
-    for (int n=0; n<vvNew.size(); n++)
+    for (int n=0; n<vvNew.size(); ++n)
     {
         std::set<int> &vNew = vvNew[n];
-        for (std::set<int>::iterator it = vNew.begin(); it != vNew.end(); it++)
+        for (std::set<int>::iterator it = vNew.begin(); it != vNew.end(); ++it)
         {
             if (!mapNew.count(*it)) return -12;
             if (--mapNew[*it] == 0)
@@ -497,7 +497,7 @@ void CAddrMan::GetAddr_(std::vector<CAddress> &vAddr)
         nNodes = ADDRMAN_GETADDR_MAX;
 
     // perform a random shuffle over the first nNodes elements of vRandom (selecting from all)
-    for (int n = 0; n<nNodes; n++)
+    for (int n = 0; n<nNodes; ++n)
     {
         int nRndPos = GetRandInt(vRandom.size() - n) + n;
         SwapRandom(n, nRndPos);

@@ -42,14 +42,14 @@ void SHA256Transform(void* pstate, void* pinput, const void* pinit)
 
     SHA256_Init(&ctx);
 
-    for (int i = 0; i < 16; i++)
+    for (int i = 0; i < 16; ++i)
         ((uint32_t*)data)[i] = ByteReverse(((uint32_t*)pinput)[i]);
 
-    for (int i = 0; i < 8; i++)
+    for (int i = 0; i < 8; ++i)
         ctx.h[i] = ((uint32_t*)pinit)[i];
 
     SHA256_Update(&ctx, data, sizeof(data));
-    for (int i = 0; i < 8; i++)
+    for (int i = 0; i < 8; ++i)
         ((uint32_t*)pstate)[i] = ctx.h[i];
 }
 
@@ -169,7 +169,7 @@ CBlock* CreateNewBlock(CWallet* pwallet, bool fProofOfStake, int64_t* pFees)
     pblock->nBits = GetNextTargetRequired(pindexPrev, fProofOfStake);
 
     // Collect memory pool transactions into the block
-    int64_t nFees = 0;
+    //int64_t nFees = 0;
     {
         LOCK2(cs_main, mempool.cs);
         CTxDB txdb("r");
@@ -258,7 +258,8 @@ CBlock* CreateNewBlock(CWallet* pwallet, bool fProofOfStake, int64_t* pFees)
 
         TxPriorityCompare comparer(fSortedByFee);
         std::make_heap(vecPriority.begin(), vecPriority.end(), comparer);
-
+	
+    	int64_t nFees = 0;
         while (!vecPriority.empty())
         {
             // Take highest priority transaction off the priority queue:
@@ -357,7 +358,7 @@ CBlock* CreateNewBlock(CWallet* pwallet, bool fProofOfStake, int64_t* pFees)
         nLastBlockSize = nBlockSize;
 
         if (fDebug && GetBoolArg("-printpriority"))
-            printf("CreateNewBlock(): total size %"PRIu64"\n", nBlockSize);
+            printf("CreateNewBlock(): total size %" PRIu64 "\n", nBlockSize);
 
         if (!fProofOfStake)
             pblock->vtx[0].vout[0].nValue = GetProofOfWorkReward(nFees);
@@ -432,7 +433,7 @@ void FormatHashBuffers(CBlock* pblock, char* pmidstate, char* pdata, char* phash
     FormatHashBlocks(&tmp.hash1, sizeof(tmp.hash1));
 
     // Byte swap all the input buffer
-    for (unsigned int i = 0; i < sizeof(tmp)/4; i++)
+    for (unsigned int i = 0; i < sizeof(tmp)/4; ++i)
         ((unsigned int*)&tmp)[i] = ByteReverse(((unsigned int*)&tmp)[i]);
 
     // Precalc the first half of the first hash, which stays constant

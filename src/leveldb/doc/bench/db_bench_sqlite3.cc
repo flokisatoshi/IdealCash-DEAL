@@ -191,7 +191,7 @@ class Benchmark {
     fprintf(stdout, "------------------------------------------------\n");
   }
 
-  void PrintWarnings() {
+  static void PrintWarnings() {
 #if defined(__GNUC__) && !defined(__OPTIMIZE__)
     fprintf(stdout,
             "WARNING: Optimization is disabled: benchmarks unnecessarily slow\n"
@@ -203,7 +203,7 @@ class Benchmark {
 #endif
   }
 
-  void PrintEnvironment() {
+  static void PrintEnvironment() {
     fprintf(stderr, "SQLite:     version %s\n", SQLITE_VERSION);
 
 #if defined(__linux)

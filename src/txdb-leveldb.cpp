@@ -406,7 +406,7 @@ bool CTxDB::LoadBlockIndex()
         // NovaCoin: calculate stake modifier checksum
         pindex->nStakeModifierChecksum = GetStakeModifierChecksum(pindex);
         if (!CheckStakeModifierCheckpoints(pindex->nHeight, pindex->nStakeModifierChecksum))
-            return error("CTxDB::LoadBlockIndex() : Failed stake modifier checkpoint height=%d, modifier=0x%016"PRIx64, pindex->nHeight, pindex->nStakeModifier);
+            return error("CTxDB::LoadBlockIndex() : Failed stake modifier checkpoint height=%d, modifier=0x%016" PRIx64 , pindex->nHeight, pindex->nStakeModifier);
     }
 
     // Load hashBestChain pointer to end of best chain
@@ -489,9 +489,9 @@ bool CTxDB::LoadBlockIndex()
                             }
                     }
                     // check level 4: check whether spent txouts were spent within the main chain
-                    unsigned int nOutput = 0;
                     if (nCheckLevel>3)
                     {
+                    	unsigned int nOutput = 0;
                         BOOST_FOREACH(const CDiskTxPos &txpos, txindex.vSpent)
                         {
                             if (!txpos.IsNull())

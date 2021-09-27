@@ -166,7 +166,7 @@ class Benchmark {
     fprintf(stdout, "------------------------------------------------\n");
   }
 
-  void PrintWarnings() {
+  static void PrintWarnings() {
 #if defined(__GNUC__) && !defined(__OPTIMIZE__)
     fprintf(stdout,
             "WARNING: Optimization is disabled: benchmarks unnecessarily slow\n"
@@ -178,7 +178,7 @@ class Benchmark {
 #endif
   }
 
-  void PrintEnvironment() {
+  static void PrintEnvironment() {
     fprintf(stderr, "Kyoto Cabinet:    version %s, lib ver %d, lib rev %d\n",
             kyotocabinet::VERSION, kyotocabinet::LIBVER, kyotocabinet::LIBREV);
 
@@ -338,7 +338,7 @@ class Benchmark {
       bool write_sync = false;
       if (name == Slice("fillseq")) {
         Write(write_sync, SEQUENTIAL, FRESH, num_, FLAGS_value_size, 1);
-        
+        DBSynchronize(db_);
       } else if (name == Slice("fillrandom")) {
         Write(write_sync, RANDOM, FRESH, num_, FLAGS_value_size, 1);
         DBSynchronize(db_);

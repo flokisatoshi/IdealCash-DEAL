@@ -84,7 +84,7 @@ const Bignum& PrivateCoin::getRandomness() const {
 void PrivateCoin::mintCoin(const CoinDenomination denomination) {
 	// Repeat this process up to MAX_COINMINT_ATTEMPTS times until
 	// we obtain a prime number
-	for(uint32_t attempt = 0; attempt < MAX_COINMINT_ATTEMPTS; attempt++) {
+	for(uint32_t attempt = 0; attempt < MAX_COINMINT_ATTEMPTS; ++attempt) {
 
 		// Generate a random serial number in the range 0...{q-1} where
 		// "q" is the order of the commitment group.
@@ -129,7 +129,7 @@ void PrivateCoin::mintCoinFast(const CoinDenomination denomination) {
 	
 	// Repeat this process up to MAX_COINMINT_ATTEMPTS times until
 	// we obtain a prime number
-	for (uint32_t attempt = 0; attempt < MAX_COINMINT_ATTEMPTS; attempt++) {
+	for (uint32_t attempt = 0; attempt < MAX_COINMINT_ATTEMPTS; ++attempt) {
 		// First verify that the commitment is a prime number
 		// in the appropriate range. If not, we'll throw this coin
 		// away and generate a new one.

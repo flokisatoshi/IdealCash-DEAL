@@ -233,7 +233,7 @@ void CDBEnv::CheckpointLSN(std::string strFile)
 CDB::CDB(const char *pszFile, const char* pszMode) :
     pdb(NULL), activeTxn(NULL)
 {
-    int ret;
+    //int ret;
     if (pszFile == NULL)
         return;
 
@@ -254,7 +254,7 @@ CDB::CDB(const char *pszFile, const char* pszMode) :
         if (pdb == NULL)
         {
             pdb = new Db(&bitdb.dbenv, 0);
-
+	    int ret;
             bool fMockDb = bitdb.IsMock();
             if (fMockDb)
             {
@@ -462,9 +462,9 @@ void CDBEnv::Flush(bool fShutdown)
                 mapFileUseCount.erase(mi++);
             }
             else
-                mi++;
+                ++mi;
         }
-        printf("DBFlush(%s)%s ended %15"PRId64"ms\n", fShutdown ? "true" : "false", fDbEnvInit ? "" : " db not started", GetTimeMillis() - nStart);
+        printf("DBFlush(%s)%s ended %15" PRId64 "ms\n", fShutdown ? "true" : "false", fDbEnvInit ? "" : " db not started", GetTimeMillis() - nStart);
         if (fShutdown)
         {
             char** listp;

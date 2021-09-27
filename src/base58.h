@@ -56,7 +56,7 @@ inline std::string EncodeBase58(const unsigned char* pbegin, const unsigned char
     }
 
     // Leading zeroes encoded as base58 zeros
-    for (const unsigned char* p = pbegin; p < pend && *p == 0; p++)
+    for (const unsigned char* p = pbegin; p < pend && *p == 0; ++p)
         str += pszBase58[0];
 
     // Convert little endian std::string to big endian
@@ -80,16 +80,16 @@ inline bool DecodeBase58(const char* psz, std::vector<unsigned char>& vchRet)
     CBigNum bn = 0;
     CBigNum bnChar;
     while (isspace(*psz))
-        psz++;
+        ++psz;
 
     // Convert big endian string to bignum
-    for (const char* p = psz; *p; p++)
+    for (const char* p = psz; *p; ++p)
     {
         const char* p1 = strchr(pszBase58, *p);
         if (p1 == NULL)
         {
             while (isspace(*p))
-                p++;
+                ++p;
             if (*p != '\0')
                 return false;
             break;
@@ -109,8 +109,8 @@ inline bool DecodeBase58(const char* psz, std::vector<unsigned char>& vchRet)
 
     // Restore leading zeros
     int nLeadingZeros = 0;
-    for (const char* p = psz; *p == pszBase58[0]; p++)
-        nLeadingZeros++;
+    for (const char* p = psz; *p == pszBase58[0]; ++p)
+        ++nLeadingZeros;
     vchRet.assign(nLeadingZeros + vchTmp.size(), 0);
 
     // Convert little endian data to big endian
@@ -268,7 +268,7 @@ public:
     CBitcoinAddressVisitor(CBitcoinAddress *addrIn) : addr(addrIn) { }
     bool operator()(const CKeyID &id) const;
     bool operator()(const CScriptID &id) const;
-    bool operator()(const CNoDestination &no) const;
+    bool operator()(const CNoDestination &id) const;
 };
 
 class CBitcoinAddress : public CBase58Data

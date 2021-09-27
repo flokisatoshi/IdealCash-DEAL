@@ -53,12 +53,12 @@ LogTestResult(string testName, bool (*testPtr)())
 
 	if (testResult == true) {
 		printf("\t[PASS]\n");
-		gSuccessfulTests++;
+		++gSuccessfulTests;
 	} else {
 		printf("\t[FAIL]\n");
 	}
 
-	gNumTests++;
+	++gNumTests;
 }
 
 Bignum
@@ -141,7 +141,7 @@ Test_GenerateGroupParams()
 	int32_t pLen = 1024, qLen = 256, count;
 	IntegerGroupParams group;
 
-	for (count = 0; count < 1; count++) {
+	for (count = 0; count < 1; ++count) {
 
 		try {
 			group = deriveIntegerGroupParams(calculateSeed(GetTestModulus(), "test", ZEROCOIN_DEFAULT_SECURITYLEVEL, "TEST GROUP"), pLen, qLen);
@@ -198,7 +198,7 @@ Test_Accumulator()
 		Accumulator accFour(&g_Params->accumulatorParams);
 		AccumulatorWitness wThree(g_Params, accThree, gCoins[0]->getPublicCoin());
 
-		for (uint32_t i = 0; i < TESTS_COINS_TO_ACCUMULATE; i++) {
+		for (uint32_t i = 0; i < TESTS_COINS_TO_ACCUMULATE; ++i) {
 			accOne += gCoins[i]->getPublicCoin();
 			accTwo += gCoins[TESTS_COINS_TO_ACCUMULATE - (i+1)]->getPublicCoin();
 			accThree += gCoins[i]->getPublicCoin();
@@ -248,7 +248,7 @@ bool
 Test_EqualityPoK()
 {
 	// Run this test 10 times
-	for (uint32_t i = 0; i < 10; i++) {
+	for (uint32_t i = 0; i < 10; ++i) {
 		try {
 			// Generate a random integer "val"
 			Bignum val = Bignum::randBignum(g_Params->coinCommitmentGroup.groupOrder);
@@ -308,7 +308,7 @@ Test_MintCoin()
 
 	try {
 		// Generate a list of coins
-		for (uint32_t i = 0; i < TESTS_COINS_TO_ACCUMULATE; i++) {
+		for (uint32_t i = 0; i < TESTS_COINS_TO_ACCUMULATE; ++i) {
 			gCoins[i] = new PrivateCoin(g_Params);
 
 			PublicCoin pc = gCoins[i]->getPublicCoin();
@@ -346,7 +346,7 @@ Test_MintAndSpend()
 		Accumulator acc(&g_Params->accumulatorParams);
 		AccumulatorWitness wAcc(g_Params, acc, gCoins[0]->getPublicCoin());
 
-		for (uint32_t i = 0; i < TESTS_COINS_TO_ACCUMULATE; i++) {
+		for (uint32_t i = 0; i < TESTS_COINS_TO_ACCUMULATE; ++i) {
 			acc += gCoins[i]->getPublicCoin();
 			wAcc +=gCoins[i]->getPublicCoin();
 		}
@@ -388,7 +388,7 @@ Test_RunAllTests()
 	g_Params = ZCParams;
 
 	gNumTests = gSuccessfulTests = gProofSize = 0;
-	for (uint32_t i = 0; i < TESTS_COINS_TO_ACCUMULATE; i++) {
+	for (uint32_t i = 0; i < TESTS_COINS_TO_ACCUMULATE; ++i) {
 		gCoins[i] = NULL;
 	}
 
@@ -412,7 +412,7 @@ Test_RunAllTests()
 	}
 
 	// Clear any generated coins
-	for (uint32_t i = 0; i < TESTS_COINS_TO_ACCUMULATE; i++) {
+	for (uint32_t i = 0; i < TESTS_COINS_TO_ACCUMULATE; ++i) {
 		delete gCoins[i];
 	}
 

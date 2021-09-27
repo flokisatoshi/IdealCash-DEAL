@@ -34,11 +34,11 @@ bool RecvLine(SOCKET hSocket, std::string& strLine);
 bool GetMyExternalIP(CNetAddr& ipRet);
 void AddressCurrentlyConnected(const CService& addr);
 CNode* FindNode(const CNetAddr& ip);
-CNode* FindNode(const CService& ip);
-CNode* ConnectNode(CAddress addrConnect, const char *strDest = NULL);
+CNode* FindNode(const CService& addr);
+CNode* ConnectNode(CAddress addrConnect, const char *pszDest = NULL);
 void MapPort();
 unsigned short GetListenPort();
-bool BindListenPort(const CService &bindAddr, std::string& strError=REF(std::string()));
+bool BindListenPort(const CService &addrBind, std::string& strError=REF(std::string()));
 void StartNode(void* parg);
 bool StopNode();
 void SocketSendData(CNode *pnode);
@@ -87,7 +87,7 @@ public:
         param1 = param1In;
     }
 
-    bool IsNull()
+    const bool IsNull()
     {
         return fn == NULL;
     }
@@ -377,7 +377,7 @@ public:
         // the key is the earliest time the request can be sent
         int64_t& nRequestTime = mapAlreadyAskedFor[inv];
         if (fDebugNet)
-            printf("askfor %s   %"PRId64" (%s)\n", inv.ToString().c_str(), nRequestTime, DateTimeStrFormat("%H:%M:%S", nRequestTime/1000000).c_str());
+            printf("askfor %s   %" PRId64 " (%s)\n", inv.ToString().c_str(), nRequestTime, DateTimeStrFormat("%H:%M:%S", nRequestTime/1000000).c_str());
 
         // Make sure not to reuse time indexes to keep things in the same order
         int64_t nNow = (GetTime() - 1) * 1000000;
@@ -681,7 +681,7 @@ public:
     static void ClearBanned(); // needed for unit testing
     static bool IsBanned(CNetAddr ip);
     bool Misbehaving(int howmuch); // 1 == a little, 100 == a lot
-    void copyStats(CNodeStats &stats);
+    const void copyStats(CNodeStats &stats);
 };
 
 inline void RelayInventory(const CInv& inv)
